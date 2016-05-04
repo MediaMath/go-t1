@@ -1,5 +1,5 @@
 /*
-Package t1 is a go (golang) library for MediaMath's APIs.
+Package t1 is a Go library for MediaMath's APIs.
 
 Construct a new T1 client, then use the various services on the client to
 access different parts of the MediaMath API modules.
@@ -13,7 +13,7 @@ For example:
 		"github.com/MediaMath/go-t1/authenticators/cookie"
 	)
 
-	auth := cookieauth.New("myusername", "mypassword", "myapikey")
+	auth := cookie.New("myusername", "mypassword", "myapikey")
 	service := t1.New(auth)
 	orgs, err := client.Organizations.List(nil)
 

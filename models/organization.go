@@ -4,4 +4,31 @@ package models
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-type Organization struct{}
+import (
+	"time"
+)
+
+type Organization struct {
+	Address1           string    `json:"address_1"`
+	Address2           string    `json:"address_2"`
+	AdXSeatAccountID   int       `json:"adx_seat_account_id"`
+	AllowBYOPrice      bool      `json:"allow_byo_price"`
+	AllowXAgencyPixels bool      `json:"allow_x_agency_pixels"`
+	City               string    `json:"city"`
+	ContactName        string    `json:"contact_name"`
+	Country            string    `json:"country"`
+	CreatedOn          time.Time `json:"created_on"`
+	CurrencyCode       string    `json:"currency_code"`
+	ID                 int       `json:"id"`
+	MMContactName      string    `json:"mm_contact_name"`
+	Name               string    `json:"name"`
+	Phone              string    `json:"phone"`
+	State              string    `json:"state"`
+	Status             bool      `json:"status"`
+	TagRuleset         string    `json:"tag_ruleset"`
+	UpdatedOn          time.Time `json:"updated_on"`
+	UseEvidonOptout    bool      `json:"use_evidon_optout"`
+	Version            int       `json:"version"`
+	Zip                string    `json:"zip"`
+	EntityType         string    `json:"entity_type"`
+}

@@ -20,3 +20,13 @@ For example:
 For API documentation, please visit https://developer.mediamath.com
 */
 package t1
+
+// Copyright 2016 MediaMath <http://www.mediamath.com>.  All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+const (
+	versionMajor = 0
+	versionMinor = 1
+	versionPatch = 0
+)

@@ -22,6 +22,7 @@ type Organization struct {
 	ID                 int       `json:"id"`
 	MMContactName      string    `json:"mm_contact_name"`
 	Name               string    `json:"name"`
+	OrgType            []string  `json:"org_type"`
 	Phone              string    `json:"phone"`
 	State              string    `json:"state"`
 	Status             bool      `json:"status"`

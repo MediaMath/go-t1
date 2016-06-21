@@ -20,7 +20,7 @@ $ go get github.com/MediaMath/go-t1
 ## Usage
 
 ```go
-import "github.com/google/go-github/github"
+import "github.com/MediaMath/go-t1"
 ```
 
 Construct a new client, then use the various services on the client to

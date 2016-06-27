@@ -1,0 +1,134 @@
+package cookie
+
+// Copyright 2016 MediaMath <http://www.mediamath.com>. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+import (
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"os"
+	"reflect"
+	"testing"
+	"time"
+)
+
+var (
+	prod, _ = url.Parse("https://api.mediamath.com")
+)
+
+func setup() {
+	os.Setenv("T1_API_USERNAME", "user")
+	os.Setenv("T1_API_PASSWORD", "password")
+	os.Setenv("T1_API_KEY", "apikey")
+}
+
+func setupServer(statusCode int, filename, cType string) *httptest.Server {
+	hf := http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		f, err := os.Open(filename)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		if cType == "" {
+			rw.Header().Set("Content-Type", mediaTypeJSON)
+		} else {
+			rw.Header().Set("Content-Type", cType)
+		}
+		rw.WriteHeader(statusCode)
+		io.Copy(rw, f)
+	})
+
+	return httptest.NewServer(hf)
+}
+
+func TestCredentialsFromEnv(t *testing.T) {
+	setup()
+	c := GetCredentialsFromEnv()
+	if exp := "user"; c.Username != exp {
+		t.Errorf("env username: want %v, got %v", exp, c.Username)
+	}
+	if exp := "password"; c.Password != exp {
+		t.Errorf("env password: want %v, got %v", exp, c.Password)
+	}
+	if exp := "apikey"; c.APIKey != exp {
+		t.Errorf("env api key: want %v, got %v", exp, c.APIKey)
+	}
+}
+
+func TestConfigEncode(t *testing.T) {
+	setup()
+	vals := GetCredentialsFromEnv().Encode()
+	exp := url.Values{
+		"user":     []string{"user"},
+		"password": []string{"password"},
+		"api_key":  []string{"apikey"},
+	}
+	if !reflect.DeepEqual(exp, vals) {
+		t.Errorf("config encode: want %v, got %v", exp, vals)
+	}
+}
+
+func TestNewClient(t *testing.T) {
+	c, err := New(Config{}, nil)
+	if err != nil {
+		t.Errorf("new: %v", err)
+	}
+	if c.Jar == nil {
+		t.Error("new: expected cookie jar, got none attached")
+	}
+	if exp := 300 * time.Second; c.Timeout != exp {
+		t.Errorf("new timeout: want %v, got %v", exp, c.Timeout)
+	}
+}
+
+func TestValidLogin(t *testing.T) {
+	setup()
+	conf := GetCredentialsFromEnv()
+	c, _ := New(conf, nil)
+
+	s := setupServer(200, "test/valid_login.json", "")
+	defer s.Close()
+
+	u, _ := url.Parse(s.URL)
+	err := Login(c, u, conf)
+	if err != nil {
+		t.Errorf("valid login: %v", err)
+	}
+}
+
+func TestDeveloperInactive(t *testing.T) {
+	setup()
+	conf := GetCredentialsFromEnv()
+	c, _ := New(conf, nil)
+
+	s := setupServer(403, "test/invalid_developerinactive.html", "text/xml")
+	defer s.Close()
+
+	u, _ := url.Parse(s.URL)
+	err := Login(c, u, conf)
+	if err == nil {
+		t.Error("dev inactive: expected an error, got none")
+	} else if exp, e := "login: <h1>Developer Inactive</h1>\n", err.Error(); e != exp {
+		t.Errorf("dev inactive: want %v, got %v", exp, e)
+	}
+}
+
+func TestAuthError(t *testing.T) {
+	setup()
+	conf := GetCredentialsFromEnv()
+	c, _ := New(conf, nil)
+
+	s := setupServer(401, "test/invalid_autherror.json", "")
+	defer s.Close()
+
+	u, _ := url.Parse(s.URL)
+	err := Login(c, u, conf)
+	if err == nil {
+		t.Error("auth error: expected an error, got none")
+	} else if exp, e := "login: Authentication error", err.Error(); e != exp {
+		t.Errorf("dev inactive: want %v, got %v", exp, e)
+	}
+}

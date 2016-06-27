@@ -1,0 +1,11 @@
+{
+  "errors": [
+    {
+      "message": "Authentication error"
+    }
+  ],
+  "meta": {
+    "called_on": "2016-06-27T16:23:59+0000",
+    "status": "auth_error"
+  }
+}

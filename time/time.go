@@ -1,4 +1,4 @@
-package t1
+package time
 
 // Copyright 2016 MediaMath <http://www.mediamath.com>. All rights reserved.
 // Use of this source code is governed by a BSD-style

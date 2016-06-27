@@ -65,7 +65,9 @@ func Login(client *http.Client, base *url.URL, conf Config) error {
 	if err != nil {
 		return err
 	}
+
 	req.Header.Add("Accept", mediaTypeJSON)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := client.Do(req)
 	if err != nil {
 		return err

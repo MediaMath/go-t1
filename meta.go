@@ -5,15 +5,15 @@ package t1
 // license that can be found in the LICENSE file.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 type Meta struct {
-	CalledOn   time.Time `json:"called_on"`
-	Count      int       `json:"count"`
-	ETag       string    `json:"etag"`
-	NextPage   string    `json:"next_page"`
-	Offset     int       `json:"offset"`
-	Status     string    `json:"status"`
-	TotalCount int       `json:"total_count"`
+	CalledOn   time.AdamaTime `json:"called_on"`
+	Count      int            `json:"count"`
+	ETag       string         `json:"etag"`
+	NextPage   string         `json:"next_page"`
+	Offset     int            `json:"offset"`
+	Status     string         `json:"status"`
+	TotalCount int            `json:"total_count"`
 }

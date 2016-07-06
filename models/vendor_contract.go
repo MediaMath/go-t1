@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// VendorContract represents a vendor_contract object
 type VendorContract struct {
 	CampaignID    int       `json:"campaign_id"`
 	CreatedOn     time.Time `json:"created_on"`

@@ -4,6 +4,7 @@ package models
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// TargetValue represents a target_value object
 type TargetValue struct {
 	ChildCount        int    `json:"child_count"`
 	DimensionCode     string `json:"dimension_code"`

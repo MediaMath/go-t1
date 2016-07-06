@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// AtomicCreative represents an atomic_creative object
 type AtomicCreative struct {
 	AdFormat             string    `json:"ad_format"`
 	AdServerType         string    `json:"ad_server_type"`

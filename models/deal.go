@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Deal represents a deal object
 type Deal struct {
 	AdvertiserID   int       `json:"advertiser_id"`
 	CreatedOn      time.Time `json:"created_on"`

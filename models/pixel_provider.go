@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// PixelProvider represents a pixel_provider object
 type PixelProvider struct {
 	AgencyID     int       `json:"agency_id"`
 	CreatedOn    time.Time `json:"created_on"`

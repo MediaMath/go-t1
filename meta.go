@@ -8,6 +8,7 @@ import (
 	"github.com/MediaMath/go-t1/time"
 )
 
+// Meta is a struct of the metadata returned by some of the APIs.
 type Meta struct {
 	CalledOn   time.AdamaTime `json:"called_on"`
 	Count      int            `json:"count"`

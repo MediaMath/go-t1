@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// SitePlacement represents a site_placement object
 type SitePlacement struct {
 	BillMediaToClient bool      `json:"bill_media_to_client"`
 	CreatedOn         time.Time `json:"created_on"`

@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Organization represents a organization object
 type Organization struct {
 	Address1           string    `json:"address_1"`
 	Address2           string    `json:"address_2"`

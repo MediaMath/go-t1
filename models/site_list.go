@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// SiteList represents a site_list object
 type SiteList struct {
 	CreatedOn        time.Time `json:"created_on"`
 	Filename         string    `json:"filename"`

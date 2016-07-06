@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// StrategyConcept represents a strategy_concept object
 type StrategyConcept struct {
 	ConceptID  int       `json:"concept_id"`
 	CreatedOn  time.Time `json:"created_on"`

@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Campaign represents a campaign object
 type Campaign struct {
 	AdServerFee               float32   `json:"ad_server_fee"`
 	AdServerID                int       `json:"ad_server_id"`

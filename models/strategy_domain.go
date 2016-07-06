@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// StrategyDomain represents a strategy_domain object
 type StrategyDomain struct {
 	CreatedOn   time.Time `json:"created_on"`
 	Domain      string    `json:"domain"`

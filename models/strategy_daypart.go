@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// StrategyDayPart represents a strategy_daypart object
 type StrategyDayPart struct {
 	CreatedOn  time.Time `json:"created_on"`
 	Days       string    `json:"days"`

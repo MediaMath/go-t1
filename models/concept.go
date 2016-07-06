@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Concept represents a concept object
 type Concept struct {
 	AdvertiserID int       `json:"advertiser_id"`
 	CreatedOn    time.Time `json:"created_on"`

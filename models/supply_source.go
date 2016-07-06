@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// SupplySource represents a supply_source object
 type SupplySource struct {
 	BidderExchangeIdentifier int       `json:"bidder_exchange_identifier"`
 	Code                     string    `json:"code"`

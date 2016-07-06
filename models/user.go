@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// User represents a user object
 type User struct {
 	AccessInternalFees        bool      `json:"access_internal_fees"`
 	Active                    bool      `json:"active"`

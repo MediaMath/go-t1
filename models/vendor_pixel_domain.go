@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// VendorPixelDomain represents a vendor_pixel_domain object
 type VendorPixelDomain struct {
 	CreatedOn      time.Time `json:"created_on"`
 	Domain         string    `json:"domain"`

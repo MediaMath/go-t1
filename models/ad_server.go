@@ -4,6 +4,7 @@ package models
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// AdServer represents an ad_server object
 type AdServer struct {
 	ID         int    `json:"id"`
 	Name       string `json:"name"`

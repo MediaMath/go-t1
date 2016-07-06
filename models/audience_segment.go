@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// AudienceSegment represents an audience_segment object
 type AudienceSegment struct {
 	AudienceVendorID int       `json:"audience_vendor_id"`
 	Buyable          bool      `json:"buyable"`

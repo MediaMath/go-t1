@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Creative represents a creative object
 type Creative struct {
 	AtomicCreativeID int       `json:"atomic_creative_id"`
 	CreatedOn        time.Time `json:"created_on"`

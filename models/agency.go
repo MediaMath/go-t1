@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Agency represents an agency object
 type Agency struct {
 	AllowXAdvOptimization bool      `json:"allow_x_adv_optimization"`
 	AllowXAdvPixels       bool      `json:"allow_x_adv_pixels"`

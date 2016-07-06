@@ -84,6 +84,26 @@ func TestNewClient(t *testing.T) {
 	}
 }
 
+func TestSetSession(t *testing.T) {
+	c, _ := New(Config{}, nil)
+	err := SetSession(c, "mysessionid", prod)
+	if err != nil {
+		t.Errorf("set session: %v", err)
+	}
+
+	cooks := c.Jar.Cookies(prod)
+	if len(cooks) == 0 {
+		t.Fatal("set session: no cookies set")
+	}
+	cook := cooks[0]
+	if want, got := "adama_session", cook.Name; want != got {
+		t.Errorf("cookie name: want %v, got %v", want, got)
+	}
+	if want, got := "mysessionid", cook.Value; want != got {
+		t.Errorf("cookie value: want %v, got %v", want, got)
+	}
+}
+
 func TestValidLogin(t *testing.T) {
 	setup()
 	conf := GetCredentialsFromEnv()

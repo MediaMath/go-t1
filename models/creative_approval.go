@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// CreativeApproval represents a creative_approval object
 type CreativeApproval struct {
 	AdditionalDetail     int       `json:"additional_detail"`
 	ApprovalStatus       int       `json:"approval_status"`

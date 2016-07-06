@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// TargetingVendor represents a targeting_vendor object
 type TargetingVendor struct {
 	CreatedOn             time.Time `json:"created_on"`
 	ID                    int       `json:"id"`

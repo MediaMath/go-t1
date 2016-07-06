@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// PlacementSlot represents a placement_slot object
 type PlacementSlot struct {
 	AdSlot            int       `json:"ad_slot"`
 	AllowRemnant      bool      `json:"allow_remnant"`

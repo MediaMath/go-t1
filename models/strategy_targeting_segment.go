@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// StrategyTargetingSegment represents a strategy_targeting_segment object
 type StrategyTargetingSegment struct {
 	CreatedOn          time.Time `json:"created_on"`
 	GroupIdentifier    string    `json:"group_identifier"`

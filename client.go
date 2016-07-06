@@ -31,6 +31,12 @@ type Client struct {
 	// HTTP client used to make requests. This client should know how to handle authentication
 	client *http.Client
 
+	// API Key to be used. This will be included as a query string
+	// parameter in all requests made. API key typically will need
+	// to be included in the construction of the HTTP client as well.
+	// Independent of that, it must be included here.
+	APIKey string
+
 	// Base URL for API requests. Defaults to the production API endpoint,
 	// but can be set to a specific domain for Sandbox or other similar
 	// environments. Should be protocol and domain name without trailing slash
@@ -74,7 +80,7 @@ type Client struct {
 // which require authentication (all methods at this point), provide an
 // http.Client that will perform the authentication for you (such as that
 // provided by the authenticators/oauth2 or authenticators/cookie libraries).
-func NewClient(httpClient *http.Client, baseURL *url.URL) *Client {
+func NewClient(httpClient *http.Client, apiKey string, baseURL *url.URL) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 300 * time.Second}
 	}
@@ -84,6 +90,7 @@ func NewClient(httpClient *http.Client, baseURL *url.URL) *Client {
 
 	c := &Client{
 		client:    httpClient,
+		APIKey:    apiKey,
 		BaseURL:   baseURL,
 		userAgent: generateUserAgentString(),
 		rateMu:    sync.Mutex{},

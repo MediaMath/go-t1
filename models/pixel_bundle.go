@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// PixelBundle represents a pixel_bundle object (what you think of as a pixel)
 type PixelBundle struct {
 	AdvertiserID         int       `json:"advertiser_id"`
 	AgencyID             int       `json:"agency_id"`

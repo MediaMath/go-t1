@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Publisher represents a publisher object
 type Publisher struct {
 	CreatedOn      time.Time `json:"created_on"`
 	ID             int       `json:"id"`

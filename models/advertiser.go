@@ -8,6 +8,7 @@ import (
 	"github.com/MediaMath/go-t1/time"
 )
 
+// Advertiser represents an advertiser object
 type Advertiser struct {
 	AdServerID              int            `json:"ad_server_id"`
 	AgencyID                int            `json:"agency_id"`

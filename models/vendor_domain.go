@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// VendorDomain represents a vendor_domain object
 type VendorDomain struct {
 	AllowSubdomainMatch bool      `json:"allow_subdomain_match"`
 	CreatedOn           time.Time `json:"created_on"`

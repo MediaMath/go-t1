@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Vendor represents a vendor object
 type Vendor struct {
 	AdxApproved            bool      `json:"adx_approved"`
 	AdxDeclarationRequired bool      `json:"adx_declaration_required"`

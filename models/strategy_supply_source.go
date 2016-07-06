@@ -4,6 +4,7 @@ package models
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// StrategySupplySource represents a strategy_supply_source object
 type StrategySupplySource struct {
 	ID             int    `json:"id"`
 	Name           string `json:"name"`

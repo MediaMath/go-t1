@@ -27,6 +27,23 @@ func TestExtendedJSONTagIgnored(t *testing.T) {
 	}
 }
 
+func TestOmitEmpty(t *testing.T) {
+	type testInt struct {
+		Int int `json:"int,omitempty"`
+	}
+	inp, exp := &testInt{}, url.Values{}
+	if got := structToMap(inp); !reflect.DeepEqual(exp, got) {
+		t.Errorf("structToMap omitempty int: want %v, got %v", exp, got)
+	}
+	type testString struct {
+		String string `json:"string,omitempty"`
+	}
+	inp2 := &testString{}
+	if got := structToMap(inp2); !reflect.DeepEqual(exp, got) {
+		t.Errorf("structToMap omitempty string: want %v, got %v", exp, got)
+	}
+}
+
 func TestStructToMapInt(t *testing.T) {
 	type testType struct {
 		Int int `json:"int"`

@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Strategy represents a strategy object
 type Strategy struct {
 	AudienceSegmentExcludeOp       string    `json:"audience_segment_exclude_op"`
 	AudienceSegmentIncludeOp       string    `json:"audience_segment_include_op"`

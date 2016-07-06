@@ -15,11 +15,14 @@ const (
 	entityPath = "/api/v2.0/"
 )
 
+// EntityService is a generalized service object that helps work with entities.
+// Designed to be instantiated for each entity type.
 type EntityService struct {
 	client     *Client
 	entityType string
 }
 
+// EntityResponse is the response returned by the Execution and Management API.
 type EntityResponse struct {
 	Meta Meta
 	Data json.RawMessage

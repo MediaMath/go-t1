@@ -23,7 +23,7 @@ func testURLParseError(t *testing.T, err error) {
 }
 
 func TestNewClient(t *testing.T) {
-	c := NewClient(nil, nil)
+	c := NewClient(nil, "myapikey", nil)
 
 	if got, want := c.BaseURL.String(), ProductionURL.String(); got != want {
 		t.Errorf("NewClient BaseURL: got %v, want %v", got, want)
@@ -35,10 +35,14 @@ func TestNewClient(t *testing.T) {
 	if got, want := c.userAgent, userAgent; got != want {
 		t.Errorf("NewClient UserAgent: got %v, want %v", got, want)
 	}
+
+	if got, want := c.APIKey, "myapikey"; got != want {
+		t.Errorf("NewClient UserAgent: got %v, want %v", got, want)
+	}
 }
 
 func TestNewClientServices(t *testing.T) {
-	c := NewClient(nil, nil)
+	c := NewClient(nil, "", nil)
 	serviceNames := []struct {
 		service *EntityService
 		name    string
@@ -71,12 +75,14 @@ func TestNewClientServices(t *testing.T) {
 		{c.Verticals, "Verticals"},
 	}
 	for _, test := range serviceNames {
-		testClientServiceNonNil(t, test.service, test.name)
+		if test.service == nil {
+			t.Errorf("%s service: got nil, expected non-nil", test.name)
+		}
 	}
 }
 
 func TestNewRequest(t *testing.T) {
-	c := NewClient(nil, nil)
+	c := NewClient(nil, "", nil)
 
 	inURL, outURL := "/foo", "https://api.mediamath.com/foo"
 	inBody, outBody := url.Values{
@@ -104,7 +110,7 @@ func TestNewRequest(t *testing.T) {
 }
 
 func TestNewRequestBadURL(t *testing.T) {
-	c := NewClient(nil, nil)
+	c := NewClient(nil, "", nil)
 	_, err := c.NewRequest("GET", ":", nil)
 	testURLParseError(t, err)
 }
@@ -116,18 +122,12 @@ func TestNewRequestBadURL(t *testing.T) {
 // certain cases, intermediate systems may treat these differently resulting in
 // subtle errors.
 func TestNewRequestEmptyBody(t *testing.T) {
-	c := NewClient(nil, nil)
+	c := NewClient(nil, "", nil)
 	req, err := c.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Fatalf("NewRequest returned unexpected error: %v", err)
 	}
 	if req.Body != nil {
 		t.Fatalf("constructed request contains a non-nil Body")
-	}
-}
-
-func testClientServiceNonNil(t *testing.T, s *EntityService, name string) {
-	if s == nil {
-		t.Errorf("%s service: got nil, expected non-nil", name)
 	}
 }

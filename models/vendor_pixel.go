@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// VendorPixel represents a vendor_pixel object
 type VendorPixel struct {
 	CreatedOn  time.Time `json:"created_on"`
 	CreativeID int       `json:"creative_id"`

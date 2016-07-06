@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Pixel represents a pixel object (child pixel)
 type Pixel struct {
 	BundleID       int       `json:"bundle_id"`
 	CreatedOn      time.Time `json:"created_on"`

@@ -11,9 +11,13 @@ import (
 )
 
 var (
+	// DefaultParams is an empty UserParams struct to use in methods when
+	// no user params are set.
 	DefaultParams = &UserParams{}
 )
 
+// UserParams is a struct of parameters to add to the query string of the
+// URL of a request.
 type UserParams struct {
 	Full       []string `json:"full,omitempty"`
 	PageLimit  int      `json:"page_limit,omitempty"`
@@ -23,6 +27,7 @@ type UserParams struct {
 	With       []string `json:"with,omitempty"`
 }
 
+// Encode encodes a UserParams struct into a query string.
 func (u *UserParams) Encode() string {
 	buf := bufferPool.Get().(*bytes.Buffer)
 	defer func() {

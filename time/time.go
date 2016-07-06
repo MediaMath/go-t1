@@ -9,10 +9,15 @@ import (
 )
 
 const (
+	// AdamaFmt is the time layout used by Adama. It is most similar to
+	// RFC3339, which is the standard used by encoding/json for encoding and
+	// decoding of time.Time values. it differs in that it doesn't have a
+	// colon in the time zone specifier, which is mandated by RFC3339, but
+	// not by ISO8601 (which this does adhere to).
 	AdamaFmt = "\"2006-01-02T15:04:05Z0700\""
 )
 
-// type AdamaTime is a time.Time type with a different JSON-parsing format.
+// AdamaTime is a time.Time type with a different JSON-parsing format.
 type AdamaTime time.Time
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
@@ -25,10 +30,14 @@ func (t *AdamaTime) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// String fulfills the Stringer interface.
 func (t AdamaTime) String() string {
 	return time.Time(t).Format("2006-01-02 15:04:05.999999999 -0700 MST")
 }
 
+// MarshalJSON fulfills the Marshaler interface for AdamaTime.
 func (t AdamaTime) MarshalJSON() ([]byte, error) {
+	// Adama *accepts* times as RFC3339 (that is, with the colon in the time
+	// zone specifier). So we can just delegate to the standard.
 	return time.Time(t).MarshalJSON()
 }

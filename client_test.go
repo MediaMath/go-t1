@@ -90,7 +90,11 @@ func TestNewRequest(t *testing.T) {
 		"version": []string{"1"},
 	}, "name=Test+Name&version=1"
 
-	req, _ := c.NewRequest("GET", inURL, inBody)
+	req, err := c.NewRequest("GET", inURL, inBody)
+
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// test that relative URL was expanded
 	if got, want := req.URL.String(), outURL; got != want {
@@ -101,6 +105,11 @@ func TestNewRequest(t *testing.T) {
 	body, _ := ioutil.ReadAll(req.Body)
 	if got, want := string(body), outBody; got != want {
 		t.Errorf("NewRequest(%q) Body: got %v, want %v", inBody, got, want)
+	}
+
+	// test that we send the right Content-Type header
+	if got, want := req.Header.Get("Content-Type"), mediaTypeURLEncoded; got != want {
+		t.Errorf("NewRequest POST Content-Type: got %v, want %v", got, want)
 	}
 
 	// test that default user-agent is attached to the request
@@ -128,6 +137,6 @@ func TestNewRequestEmptyBody(t *testing.T) {
 		t.Fatalf("NewRequest returned unexpected error: %v", err)
 	}
 	if req.Body != nil {
-		t.Fatalf("constructed request contains a non-nil Body")
+		t.Error("constructed request contains a non-nil Body")
 	}
 }

@@ -6,7 +6,6 @@ package t1
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"runtime"
@@ -18,6 +17,8 @@ import (
 const (
 	// Accept header value to get JSON output
 	mediaTypeJSON = "application/vnd.mediamath.v1+json"
+	// Content-Type  header for POST bodies
+	mediaTypeURLEncoded = "application/x-www-form-urlencoded"
 )
 
 // Standard base URLs
@@ -139,12 +140,15 @@ func (c *Client) NewRequest(method, urlStr string, body Encoder) (*http.Request,
 
 	u := c.BaseURL.ResolveReference(rel)
 
-	var buf io.Reader
+	var req *http.Request
 	if body != nil {
-		buf = strings.NewReader(body.Encode())
+		buf := strings.NewReader(body.Encode())
+		req, err = http.NewRequest(method, u.String(), buf)
+		req.Header.Add("Content-Type", mediaTypeURLEncoded)
+	} else {
+		req, err = http.NewRequest(method, u.String(), nil)
 	}
 
-	req, err := http.NewRequest(method, u.String(), buf)
 	if err != nil {
 		return nil, err
 	}

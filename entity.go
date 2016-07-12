@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
@@ -44,17 +45,24 @@ func (s *EntityService) Get(id int, data interface{}) (Meta, error) {
 	buf.WriteByte('/')
 	buf.WriteString(strconv.Itoa(id))
 
+	vals := valuesPool.Get().(url.Values)
+	defer func() {
+		vals.Del("api_key")
+		valuesPool.Put(vals)
+	}()
+
 	// The only user param that matters when retrieving a single entity
 	// is with. If with isn't supported at all then this block isn't needed.
 	// If we support including with-relations, then this block should be
 	// put back in, and the method signature should change to:
 	// func (s *EntityService) Get(id int, params *UserParams, data interface{}) (Meta, error) {
 	// if params != nil && len(params.With) > 0 {
-	// 	buf.WriteByte('?')
-	// 	buf.WriteString(params.Encode())
+	// 	structToMapGivenValues(params, vals)
 	// }
 
-	req, err := s.client.NewRequest("GET", buf.String(), nil)
+	vals.Set("api_key", s.client.APIKey)
+
+	req, err := s.client.NewRequest("GET", buf.String(), vals)
 	if err != nil {
 		return Meta{}, err
 	}
@@ -87,18 +95,25 @@ func execute(req *http.Request, c *http.Client, data interface{}) (Meta, error) 
 // it into the data object passed in. data should be a slice of whatever entity
 // the service represents.
 func (s *EntityService) List(params *UserParams, data interface{}) (Meta, error) {
-	buf := bufferPool.Get().(*bytes.Buffer)
+	buf, vals := bufferPool.Get().(*bytes.Buffer), valuesPool.Get().(url.Values)
 	defer func() {
 		buf.Reset()
 		bufferPool.Put(buf)
+		for key := range vals {
+			vals.Del(key)
+		}
+		valuesPool.Put(vals)
 	}()
 
 	buf.WriteString(entityPath)
 	buf.WriteString(s.entityType)
 	if params != nil {
-		buf.WriteByte('?')
-		buf.WriteString(params.Encode())
+		structToMapGivenValues(params, vals)
 	}
+
+	vals.Set("api_key", s.client.APIKey)
+	buf.WriteByte('?')
+	buf.WriteString(vals.Encode())
 	req, err := s.client.NewRequest("GET", buf.String(), nil)
 	if err != nil {
 		return Meta{}, err

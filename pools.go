@@ -6,17 +6,24 @@ package t1
 
 import (
 	"bytes"
+	"net/url"
 	"sync"
 )
 
 var (
 	bufferPool *sync.Pool
+	valuesPool *sync.Pool
 )
 
 func init() {
 	bufferPool = &sync.Pool{
 		New: func() interface{} {
 			return new(bytes.Buffer)
+		},
+	}
+	valuesPool = &sync.Pool{
+		New: func() interface{} {
+			return make(url.Values)
 		},
 	}
 }

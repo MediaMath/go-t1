@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-func structToMap(data interface{}) (values url.Values) {
-	values = url.Values{}
+func structToMapGivenValues(data interface{}, values url.Values) {
 	val := reflect.ValueOf(data).Elem()
 	valType := val.Type()
 	for i := 0; i < val.NumField(); i++ {
@@ -16,10 +15,8 @@ func structToMap(data interface{}) (values url.Values) {
 		if tag == "" {
 			continue
 		}
-		opts := tagOptions("")
-		if idx := strings.Index(tag, ","); idx != -1 {
-			tag, opts = tag[:idx], tagOptions(tag[idx+1:])
-		}
+		var opts tagOptions
+		tag, opts = parseTag(tag)
 
 		f := val.Field(i)
 		if !f.IsValid() || opts.Contains("omitempty") && isEmptyValue(f) {
@@ -45,11 +42,26 @@ func structToMap(data interface{}) (values url.Values) {
 			}
 		}
 	}
+}
 
+func structToMap(data interface{}) url.Values {
+	values := make(url.Values)
+	structToMapGivenValues(data, values)
 	return values
 }
 
+// tagOptions is the string following a comma in a struct field's "json"
+// tag, or the empty string. It does not include the leading comma.
 type tagOptions string
+
+// parseTag splits a struct field's json tag into its name and
+// comma-separated options.
+func parseTag(tag string) (string, tagOptions) {
+	if idx := strings.Index(tag, ","); idx != -1 {
+		return tag[:idx], tagOptions(tag[idx+1:])
+	}
+	return tag, tagOptions("")
+}
 
 // Contains reports whether a comma-separated list of options
 // contains a particular substr flag. substr must be surrounded by a

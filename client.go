@@ -5,26 +5,32 @@ package t1
 // license that can be found in the LICENSE file.
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
 const (
-	// Accept header value to get JSON output
-	mediaTypeJSON = "application/vnd.mediamath.v1+json"
-	// Content-Type  header for POST bodies
-	mediaTypeURLEncoded = "application/x-www-form-urlencoded"
+	mediaTypeJSON       = "application/vnd.mediamath.v1+json" // Accept for JSON
+	mediaTypeURLEncoded = "application/x-www-form-urlencoded" // POST Content-Type
 )
 
 // Standard base URLs
 var (
 	ProductionURL, _ = url.Parse("https://api.mediamath.com")
 	SandboxURL, _    = url.Parse("https://t1sandbox.mediamath.com")
+)
+
+var (
+	nullTime = time.Time{}
 )
 
 // A Client manages communication with the MediaMath APIs
@@ -41,9 +47,9 @@ type Client struct {
 	// Base URL for API requests. Defaults to the production API endpoint,
 	// but can be set to a specific domain for Sandbox or other similar
 	// environments. Should be protocol and domain name without trailing slash
-	BaseURL   *url.URL
-	rateMu    sync.Mutex
-	rateLimit Rate
+	BaseURL        *url.URL
+	rateMu         sync.Mutex
+	RateLimitReset time.Time
 
 	// User Agent will include library's version number
 	userAgent string
@@ -156,6 +162,108 @@ func (c *Client) NewRequest(method, urlStr string, body Encoder) (*http.Request,
 	req.Header.Add("Accept", mediaTypeJSON)
 	req.Header.Add("User-Agent", c.userAgent)
 	return req, nil
+}
+
+// parseRateLimit parses the rate limit headers when a request comes
+// back over the rate limit
+func parseRateLimit(r *http.Response) (t time.Time) {
+
+	date, retryStr := r.Header.Get("Date"), r.Header.Get("Retry-After")
+	if date == "" || retryStr == "" {
+		return
+	}
+
+	t, err := time.Parse(time.RFC1123, date)
+	if err != nil {
+		return
+	}
+
+	retry, err := strconv.Atoi(retryStr)
+	if err != nil {
+		return
+	}
+	t = t.Add(time.Duration(retry) * time.Second)
+	return
+}
+
+// Do sends an API request and returns the API response. The API response is
+// JSON decoded and stored in the value pointed to by v, or returned as an
+// error if an API error has occurred. If v implements the io.Writer
+// interface, the raw response body will be written to v, without attempting to
+// first decode it. If rate limit is exceeded and reset time is in the future,
+// Do returns *RateLimitError immediately without making a network API call.
+func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
+	// If we've hit rate limit, don't make further requests before Reset time.
+	if err := c.checkRateLimitBeforeDo(req); err != nil {
+		return nil, err
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	err = CheckResponse(resp)
+	if err != nil {
+		if e, ok := err.(*RateLimitError); ok {
+			c.rateMu.Lock()
+			c.RateLimitReset = e.RetryAt
+			c.rateMu.Unlock()
+		}
+		// even though there was an error, we still return the response
+		// in case the caller wants to inspect it further
+		return resp, err
+	}
+
+	if v != nil {
+		defer func() {
+			// Let the Transport reuse the connection
+			// cf. https://github.com/google/go-github/pull/317
+			io.CopyN(ioutil.Discard, resp.Body, 512)
+			resp.Body.Close()
+		}()
+		if w, ok := v.(io.Writer); ok {
+			io.Copy(w, resp.Body)
+		} else {
+			err = json.NewDecoder(resp.Body).Decode(v)
+			if err == io.EOF {
+				err = nil // ignore EOF errors caused by empty response body
+			}
+		}
+	}
+
+	return resp, err
+}
+
+// checkRateLimitBeforeDo does not make any network calls, but uses existing knowledge from
+// current client state in order to quickly check if *RateLimitError can be immediately returned
+// from Client.Do, and if so, returns it so that Client.Do can skip making a network API call unneccessarily.
+// Otherwise it returns nil, and Client.Do should proceed normally.
+func (c *Client) checkRateLimitBeforeDo(req *http.Request) error {
+	c.rateMu.Lock()
+	rate := c.RateLimitReset
+	c.rateMu.Unlock()
+	if !rate.IsZero() && time.Now().Before(rate) {
+		// Create a fake response.
+		resp := &http.Response{
+			Status:     http.StatusText(http.StatusForbidden),
+			StatusCode: http.StatusForbidden,
+			Request:    req,
+			Header:     make(http.Header),
+			Body:       ioutil.NopCloser(strings.NewReader("")),
+		}
+		return &RateLimitError{
+			RetryAt:  rate,
+			Response: resp,
+			Message:  fmt.Sprintf("API rate limit still exceeded until %v, not making remote request.", rate),
+		}
+	} else if !rate.IsZero() {
+		c.rateMu.Lock()
+		c.RateLimitReset = nullTime
+		c.rateMu.Unlock()
+	}
+
+	return nil
 }
 
 // generateUserAgentString generates the user agent for the client to use.

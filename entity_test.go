@@ -10,10 +10,11 @@ import (
 func TestExecuteRequestError(t *testing.T) {
 	req, err := http.NewRequest("GET", "http://localhost:234567", nil)
 	c := &http.Client{Timeout: 1 * time.Second}
+	cl := NewClient(c, "", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	meta, err := execute(req, c, nil)
+	meta, err := execute(req, cl, nil)
 	if err == nil {
 		t.Error("Expected err, got none")
 	}

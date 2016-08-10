@@ -5,13 +5,47 @@ package t1
 // license that can be found in the LICENSE file.
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"net/url"
+	"reflect"
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 )
+
+var (
+	// mux is the HTTP request multiplexer used with the test server.
+	mux *http.ServeMux
+
+	// client is the T1 client being tested.
+	client *Client
+
+	// server is a test HTTP server used to provide mock API responses.
+	server *httptest.Server
+)
+
+// setup sets up a test HTTP server along with a github.Client that is
+// configured to talk to that test server. Tests should register handlers on
+// mux which provide mock responses for the API method being tested.
+func setup() {
+	// test server
+	mux = http.NewServeMux()
+	server = httptest.NewServer(mux)
+
+	url, _ := url.Parse(server.URL)
+	// client configured to use test server
+	client = NewClient(nil, "", url)
+}
+
+// teardown closes the test HTTP server.
+func teardown() {
+	server.Close()
+}
 
 func testURLParseError(t *testing.T, err error) {
 	if err == nil {
@@ -38,6 +72,10 @@ func TestNewClient(t *testing.T) {
 
 	if got, want := c.APIKey, "myapikey"; got != want {
 		t.Errorf("NewClient UserAgent: got %v, want %v", got, want)
+	}
+
+	if !c.RateLimitReset.IsZero() {
+		t.Errorf("Client rate limit reset not initialized to zero: %v", c.RateLimitReset)
 	}
 }
 
@@ -138,5 +176,187 @@ func TestNewRequestEmptyBody(t *testing.T) {
 	}
 	if req.Body != nil {
 		t.Error("constructed request contains a non-nil Body")
+	}
+}
+
+func TestDo(t *testing.T) {
+	setup()
+	defer teardown()
+
+	type foo struct {
+		A string
+	}
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if m := "GET"; m != r.Method {
+			t.Errorf("Request method = %v, want %v", r.Method, m)
+		}
+		fmt.Fprint(w, `{"A":"a"}`)
+	})
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	body := new(foo)
+	client.Do(req, body)
+
+	want := &foo{"a"}
+	if !reflect.DeepEqual(body, want) {
+		t.Errorf("Response body = %v, want %v", body, want)
+	}
+}
+
+func TestDo_httpError(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "Bad Request", 400)
+	})
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	_, err := client.Do(req, nil)
+
+	if err == nil {
+		t.Error("Expected HTTP 400 error.")
+	}
+}
+
+// Test handling of an error caused by the internal http client's Do()
+// function. A redirect loop is pretty unlikely to occur within the T1
+// API, but does allow us to exercise the right code path.
+func TestDo_redirectLoop(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/", http.StatusFound)
+	})
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	_, err := client.Do(req, nil)
+
+	if err == nil {
+		t.Error("Expected error to be returned.")
+	}
+	if err, ok := err.(*url.Error); !ok {
+		t.Errorf("Expected a URL error; got %#v.", err)
+	}
+}
+
+// ensure rate limit is not parsed for other error responses
+func TestDo_rateLimit_errorResponse(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", "Mon, 02 Jan 2016 15:04:05 GMT")
+		w.Header().Add("Retry-After", "1")
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		http.Error(w, "Bad Request", 400)
+	})
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	_, err := client.Do(req, nil)
+
+	if err == nil {
+		t.Error("Expected error to be returned.")
+	}
+	if _, ok := err.(*RateLimitError); ok {
+		t.Errorf("Did not expect a *RateLimitError error; got %#v.", err)
+	}
+	if !client.RateLimitReset.IsZero() {
+		t.Errorf("Client rate limit reset changed: %v", client.RateLimitReset)
+	}
+}
+
+// Ensure *RateLimitError is returned when API rate limit is exceeded.
+func TestDo_rateLimit_rateLimitError(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", "Mon, 02 Jan 2016 15:04:05 GMT")
+		w.Header().Add("Retry-After", "1")
+		w.Header().Add("Content-Type", mediaTypeMashery)
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Fprintln(w, `<h1>Developer Over Qps</h1>`)
+	})
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	_, err := client.Do(req, nil)
+
+	if err == nil {
+		t.Error("Expected error to be returned.")
+	}
+	rateLimitErr, ok := err.(*RateLimitError)
+	if !ok {
+		t.Fatalf("Expected a *RateLimitError error; got %#v.", err)
+	}
+	reset := time.Date(2016, 1, 2, 15, 4, 6, 0, time.UTC)
+	if got := rateLimitErr.RetryAt.UTC(); got != reset {
+		t.Errorf("rateLimitErr rate reset: got %v, want %v", got, reset)
+	}
+}
+
+// Ensure a network call is not made when it's known that API rate limit is still exceeded.
+func TestDo_rateLimit_noNetworkCall(t *testing.T) {
+	setup()
+	defer teardown()
+
+	reset := time.Now().UTC().Round(time.Second).Add(time.Minute) // Rate reset is a minute from now, with 1 second precision.
+
+	mux.HandleFunc("/first", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", time.Now().Format(time.RFC1123))
+		w.Header().Add("Retry-After", "60")
+		w.Header().Set("Content-Type", mediaTypeMashery)
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Fprintln(w, `<h1>Developer Over Qps</h1>`)
+	})
+
+	madeNetworkCall := false
+	mux.HandleFunc("/second", func(w http.ResponseWriter, r *http.Request) {
+		madeNetworkCall = true
+	})
+
+	// First request is made, and it makes the client aware of rate reset time being in the future.
+	req, _ := client.NewRequest("GET", "/first", nil)
+	client.Do(req, nil)
+
+	// Second request should not cause a network call to be made, since client can predict a rate limit error.
+	req, _ = client.NewRequest("GET", "/second", nil)
+	_, err := client.Do(req, nil)
+
+	if madeNetworkCall {
+		t.Fatal("Network call was made, even though rate limit is known to still be exceeded.")
+	}
+
+	if err == nil {
+		t.Error("Expected error to be returned.")
+	}
+	rateLimitErr, ok := err.(*RateLimitError)
+	if !ok {
+		t.Fatalf("Expected a *RateLimitError error; got %#v.", err)
+	}
+	if got := rateLimitErr.RetryAt.UTC(); got != reset {
+		t.Errorf("rateLimitErr rate reset: got %v, want %v", got, reset)
+	}
+}
+
+func TestDo_noContent(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	var body json.RawMessage
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	_, err := client.Do(req, &body)
+
+	if err != nil {
+		t.Fatalf("Do returned unexpected error: %v", err)
 	}
 }

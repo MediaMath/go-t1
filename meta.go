@@ -10,11 +10,11 @@ import (
 
 // Meta is a struct of the metadata returned by some of the APIs.
 type Meta struct {
-	CalledOn   time.AdamaTime `json:"called_on"`
-	Count      int            `json:"count"`
-	ETag       string         `json:"etag"`
-	NextPage   string         `json:"next_page"`
-	Offset     int            `json:"offset"`
-	Status     string         `json:"status"`
-	TotalCount int            `json:"total_count"`
+	CalledOn   t1time.T1Time `json:"called_on"`
+	Count      int           `json:"count"`
+	ETag       string        `json:"etag"`
+	NextPage   string        `json:"next_page"`
+	Offset     int           `json:"offset"`
+	Status     string        `json:"status"`
+	TotalCount int           `json:"total_count"`
 }

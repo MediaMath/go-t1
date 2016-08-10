@@ -67,11 +67,14 @@ func (s *EntityService) Get(id int, data interface{}) (Meta, error) {
 		return Meta{}, err
 	}
 
-	return execute(req, s.client.client, data)
+	return execute(req, s.client, data)
 }
 
-func execute(req *http.Request, c *http.Client, data interface{}) (Meta, error) {
-	r, err := c.Do(req)
+func execute(req *http.Request, c *Client, data interface{}) (Meta, error) {
+	// Note that the GitHub library uses a custom Do function. This could be
+	// useful so that the library can handle things that come in headers, like
+	// Developer Inactive or rate limit or etc.
+	r, err := c.Do(req, nil)
 	if err != nil {
 		return Meta{}, err
 	}
@@ -119,5 +122,5 @@ func (s *EntityService) List(params *UserParams, data interface{}) (Meta, error)
 		return Meta{}, err
 	}
 
-	return execute(req, s.client.client, data)
+	return execute(req, s.client, data)
 }

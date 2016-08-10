@@ -7,6 +7,8 @@ package t1
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -78,7 +80,12 @@ func execute(req *http.Request, c *Client, data interface{}) (Meta, error) {
 	if err != nil {
 		return Meta{}, err
 	}
-	defer r.Body.Close()
+	defer func() {
+		// Let the Transport reuse the connection
+		// cf. https://github.com/google/go-github/pull/317
+		io.CopyN(ioutil.Discard, r.Body, 512)
+		r.Body.Close()
+	}()
 
 	var resp EntityResponse
 	err = json.NewDecoder(r.Body).Decode(&resp)
@@ -87,7 +94,7 @@ func execute(req *http.Request, c *Client, data interface{}) (Meta, error) {
 	}
 
 	err = json.Unmarshal(resp.Data, data)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return resp.Meta, err
 	}
 

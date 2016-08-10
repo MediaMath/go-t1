@@ -303,10 +303,10 @@ func TestDo_rateLimit_noNetworkCall(t *testing.T) {
 	setup()
 	defer teardown()
 
-	reset := time.Now().UTC().Round(time.Second).Add(time.Minute) // Rate reset is a minute from now, with 1 second precision.
+	now := time.Now().UTC().Round(time.Second)
 
 	mux.HandleFunc("/first", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Date", time.Now().Format(time.RFC1123))
+		w.Header().Add("Date", now.Format(time.RFC1123))
 		w.Header().Add("Retry-After", "60")
 		w.Header().Set("Content-Type", mediaTypeMashery)
 		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
@@ -321,6 +321,7 @@ func TestDo_rateLimit_noNetworkCall(t *testing.T) {
 
 	// First request is made, and it makes the client aware of rate reset time being in the future.
 	req, _ := client.NewRequest("GET", "/first", nil)
+	reset := now.Add(time.Minute) // Rate reset is a minute from now, with 1 second precision.
 	client.Do(req, nil)
 
 	// Second request should not cause a network call to be made, since client can predict a rate limit error.
@@ -334,6 +335,7 @@ func TestDo_rateLimit_noNetworkCall(t *testing.T) {
 	if err == nil {
 		t.Error("Expected error to be returned.")
 	}
+
 	rateLimitErr, ok := err.(*RateLimitError)
 	if !ok {
 		t.Fatalf("Expected a *RateLimitError error; got %#v.", err)

@@ -7,6 +7,7 @@ package t1
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -73,9 +74,6 @@ func (s *EntityService) Get(id int, data interface{}) (Meta, error) {
 }
 
 func execute(req *http.Request, c *Client, data interface{}) (Meta, error) {
-	// Note that the GitHub library uses a custom Do function. This could be
-	// useful so that the library can handle things that come in headers, like
-	// Developer Inactive or rate limit or etc.
 	r, err := c.Do(req, nil)
 	if err != nil {
 		return Meta{}, err

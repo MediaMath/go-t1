@@ -79,7 +79,7 @@ func TestNewClient(t *testing.T) {
 	}
 }
 
-func TestNewClientServices(t *testing.T) {
+func TestNewClient_services(t *testing.T) {
 	c := NewClient(nil, "", nil)
 	serviceNames := []struct {
 		service *EntityService
@@ -156,7 +156,7 @@ func TestNewRequest(t *testing.T) {
 	}
 }
 
-func TestNewRequestBadURL(t *testing.T) {
+func TestNewRequest_badURL(t *testing.T) {
 	c := NewClient(nil, "", nil)
 	_, err := c.NewRequest("GET", ":", nil)
 	testURLParseError(t, err)
@@ -168,7 +168,7 @@ func TestNewRequestBadURL(t *testing.T) {
 // body that is an empty string versus one that is not set at all. However, in
 // certain cases, intermediate systems may treat these differently resulting in
 // subtle errors.
-func TestNewRequestEmptyBody(t *testing.T) {
+func TestNewRequest_emptyBody(t *testing.T) {
 	c := NewClient(nil, "", nil)
 	req, err := c.NewRequest("GET", "/", nil)
 	if err != nil {
@@ -235,7 +235,7 @@ func TestDo_redirectLoop(t *testing.T) {
 	_, err := client.Do(req, nil)
 
 	if err == nil {
-		t.Error("Expected error to be returned.")
+		t.Fatal("Expected error to be returned.")
 	}
 	if err, ok := err.(*url.Error); !ok {
 		t.Errorf("Expected a URL error; got %#v.", err)
@@ -258,7 +258,7 @@ func TestDo_rateLimit_errorResponse(t *testing.T) {
 	_, err := client.Do(req, nil)
 
 	if err == nil {
-		t.Error("Expected error to be returned.")
+		t.Fatal("Expected error to be returned.")
 	}
 	if _, ok := err.(*RateLimitError); ok {
 		t.Errorf("Did not expect a *RateLimitError error; got %#v.", err)
@@ -286,7 +286,7 @@ func TestDo_rateLimit_rateLimitError(t *testing.T) {
 	_, err := client.Do(req, nil)
 
 	if err == nil {
-		t.Error("Expected error to be returned.")
+		t.Fatal("Expected error to be returned.")
 	}
 	rateLimitErr, ok := err.(*RateLimitError)
 	if !ok {
@@ -333,7 +333,7 @@ func TestDo_rateLimit_noNetworkCall(t *testing.T) {
 	}
 
 	if err == nil {
-		t.Error("Expected error to be returned.")
+		t.Fatal("Expected error to be returned.")
 	}
 
 	rateLimitErr, ok := err.(*RateLimitError)

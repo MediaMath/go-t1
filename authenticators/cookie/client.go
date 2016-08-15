@@ -102,14 +102,30 @@ func Login(client *http.Client, base *url.URL, conf Config) error {
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return err
 	}
-	if val, ok := data["errors"]; ok {
-		switch val.(type) {
-		case []interface{}:
-			ob1 := val.([]interface{})[0].(map[string]interface{})
-			return fmt.Errorf("login: %v", ob1["message"])
-		}
+
+	var (
+		errs interface{}
+		ok   bool
+	)
+	if errs, ok = data["errors"]; !ok {
+		return errors.New("login: unknown error")
 	}
-	return errors.New("login: unknown error")
+
+	switch ob := errs.(type) {
+	case string:
+		return fmt.Errorf("login: %v", ob)
+	case []interface{}:
+		switch obj := ob[0].(type) {
+		case map[string]interface{}:
+			return fmt.Errorf("login: %v", obj["message"])
+		case string:
+			return fmt.Errorf("login: %v", obj)
+		default:
+			return errors.New("login: unknown error")
+		}
+	default:
+		return errors.New("login: unknown error")
+	}
 }
 
 // SetSession sets an existing adama_session cookie to a given client.

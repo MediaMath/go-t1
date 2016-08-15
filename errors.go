@@ -19,6 +19,7 @@ type ErrorResponse struct {
 	Response *http.Response // HTTP response that caused this error
 	Message  string         `json:"message"` // error message
 	Errors   []Error        `json:"errors"`  // more detail on individual errors
+	Meta     Meta           `json:"meta"`
 }
 
 func (r *ErrorResponse) Error() string {
@@ -45,6 +46,7 @@ func (r *RateLimitError) Error() string {
 // These are example validation error codes:
 type Error struct {
 	Resource string `json:"resource"` // resource on which the error occurred
+	Type     string `json:"type"`     // Type of error (e.g. field-error)
 	Field    string `json:"field"`    // field on which the error occurred
 	Code     string `json:"code"`     // validation error code
 	Message  string `json:"message"`  // Message describing the error. Errors with Code == "custom" will always have this set.
@@ -97,11 +99,19 @@ func parseMasheryError(r *http.Response) error {
 }
 
 func parseAdamaError(r *http.Response) error {
-	var er *ErrorResponse
-	if err := json.NewDecoder(r.Body).Decode(er); err != nil {
+	var er ErrorResponse
+	if err := json.NewDecoder(r.Body).Decode(&er); err != nil {
 		return err
 	}
-	return er
+	if er.Message != "" {
+		return &er
+	}
+	if len(er.Errors) == 1 {
+		er.Message = er.Errors[0].Message
+	} else if er.Meta.Status != "" {
+		er.Message = er.Meta.Status
+	}
+	return &er
 }
 
 func getContentType(r *http.Response) string {

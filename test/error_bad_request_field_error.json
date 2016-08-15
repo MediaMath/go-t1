@@ -1,0 +1,13 @@
+{
+   "errors" : [
+      {
+         "type" : "field-error",
+         "message" : "agency_id is not writable",
+         "field" : "agency_id"
+      }
+   ],
+   "meta" : {
+      "called_on" : "2016-08-11T16:21:39+0000",
+      "status" : "invalid"
+   }
+}

@@ -11,11 +11,14 @@ For example:
 	import (
 		"github.com/MediaMath/go-t1"
 		"github.com/MediaMath/go-t1/authenticators/cookie"
+		"github.com/MediaMath/go-t1/models"
 	)
 
-	auth := cookie.New("myusername", "mypassword", "myapikey")
-	service := t1.New(auth)
-	orgs, err := client.Organizations.List(nil)
+	conf := cookie.Config{"myusername", "mypassword", "myapikey"}
+	auth := cookie.New(conf, t1.ProductionURL)
+	client := t1.NewClient(auth, conf.APIKey, t1.ProductionURL)
+	var orgs []models.Organization
+	meta, err := client.Organizations.List(nil, &orgs)
 
 For API documentation, please visit https://developer.mediamath.com
 */

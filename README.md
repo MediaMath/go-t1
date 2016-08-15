@@ -20,7 +20,7 @@ $ go get github.com/MediaMath/go-t1
 
 ## Usage
 
-[embedmd]:# (examples/get_organization.go /import/ /\)/)
+[embedmd]:# (testdata/examples/get_organization.go /import/ /\)/)
 ```go
 import (
 	"fmt"
@@ -34,7 +34,7 @@ import (
 
 To set up authentication, use an authenticator:
 
-[embedmd]:# (examples/get_organization.go /.*Set up config/ /log\.Fatalf[^}]*\}/)
+[embedmd]:# (testdata/examples/get_organization.go /.*Set up config/ /log\.Fatalf[^}]*\}/)
 ```go
 	// Set up configuration from envvars
 	conf := cookie.GetCredentialsFromEnv()
@@ -51,7 +51,7 @@ The authenticators are just `*http.Client` objects that know how to authenticate
 Construct a new client, then use the various services on the client to
 access different parts of the MediaMath API.
 
-[embedmd]:# (examples/get_organization.go /.*Construct new t1/ /fmt.Printf\("Meta:.*\)/)
+[embedmd]:# (testdata/examples/get_organization.go /.*Construct new t1/ /fmt.Printf\("Meta:.*\)/)
 ```go
 	// Construct new t1 client
 	t1Client := t1.NewClient(c, conf.APIKey, t1.ProductionURL)
@@ -66,13 +66,13 @@ access different parts of the MediaMath API.
 	fmt.Printf("Meta:\t%#v\nOrg:\t%#v\n", meta, org)
 ```
 
-This whole example is available in the examples directory as get_organiztion.go.
+This whole example is available in the testdata/examples directory as get_organiztion.go.
 
 ## Time Types
 
 Execution and Management API currently returns times in a format conforming to ISO 8601 but not RFC 3339. As such, there is a time package `t1time` that provides a time type compatible with this. This is a `time.Time` type, so can be converted easily:
 
-[embedmd]:# (examples/get_organization.go /time\.[^)]*\)/)
+[embedmd]:# (testdata/examples/get_organization.go /time\.[^)]*\)/)
 ```go
 time.Time(org.CreatedOn)
 ```

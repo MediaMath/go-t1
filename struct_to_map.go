@@ -19,7 +19,7 @@ func structToMapGivenValues(data interface{}, values url.Values) {
 		tag, opts = parseTag(tag)
 
 		f := val.Field(i)
-		if !f.IsValid() || opts.Contains("omitempty") && isEmptyValue(f) {
+		if !f.IsValid() || opts.Contains("omitempty") && isEmptyValue(f) || opts.Contains("readonly") {
 			continue
 		}
 

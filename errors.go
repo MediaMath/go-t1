@@ -16,7 +16,7 @@ const (
 
 // ErrorResponse reports one or more errors caused by an API request.
 type ErrorResponse struct {
-	Response *http.Response // HTTP response that caused this error
+	Response *http.Response `json:"-"`       // HTTP response that caused this error
 	Message  string         `json:"message"` // error message
 	Errors   []Error        `json:"errors"`  // more detail on individual errors
 	Meta     Meta           `json:"meta"`
@@ -103,14 +103,17 @@ func parseAdamaError(r *http.Response) error {
 	if err := json.NewDecoder(r.Body).Decode(&er); err != nil {
 		return err
 	}
+	er.Response = r
 	if er.Message != "" {
 		return &er
 	}
+
 	if len(er.Errors) == 1 {
 		er.Message = er.Errors[0].Message
 	} else if er.Meta.Status != "" {
 		er.Message = er.Meta.Status
 	}
+
 	return &er
 }
 

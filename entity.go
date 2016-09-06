@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -123,6 +124,39 @@ func (s *EntityService) List(params *UserParams, data interface{}) (Meta, error)
 	buf.WriteByte('?')
 	buf.WriteString(vals.Encode())
 	req, err := s.client.NewRequest("GET", buf.String(), nil)
+	if err != nil {
+		return Meta{}, err
+	}
+
+	return execute(req, s.client, data)
+}
+
+// Save posts an entity to the API. data *must* be a pointer to an object: save
+// will modify the object with what gets returned.
+func (s *EntityService) Save(data interface{}) (Meta, error) {
+	if data == nil {
+		return Meta{}, errors.New("save: nil data provided")
+	}
+
+	buf, vals := bufferPool.Get().(*bytes.Buffer), valuesPool.Get().(url.Values)
+	defer func() {
+		buf.Reset()
+		bufferPool.Put(buf)
+		for key := range vals {
+			vals.Del(key)
+		}
+		valuesPool.Put(vals)
+	}()
+
+	buf.WriteString(entityPath)
+	buf.WriteString(s.entityType)
+	buf.WriteString("?api_key=")
+	buf.WriteString(s.client.APIKey)
+
+	structToMapGivenValues(data, vals)
+	fmt.Println(data, vals, vals.Encode())
+
+	req, err := s.client.NewRequest("POST", buf.String(), vals)
 	if err != nil {
 		return Meta{}, err
 	}

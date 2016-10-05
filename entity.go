@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strconv"
 )
 
@@ -150,6 +151,10 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 
 	buf.WriteString(entityPath)
 	buf.WriteString(s.entityType)
+	if id, _ := getIDOfObject(data); id != 0 {
+		buf.WriteByte('/')
+		buf.WriteString(strconv.Itoa(id))
+	}
 	buf.WriteString("?api_key=")
 	buf.WriteString(s.client.APIKey)
 
@@ -162,4 +167,13 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 	}
 
 	return execute(req, s.client, data)
+}
+
+func getIDOfObject(data interface{}) (int, bool) {
+	p := reflect.ValueOf(data)
+	f := reflect.Indirect(p).FieldByName("ID")
+	if !f.IsValid() {
+		return 0, false
+	}
+	return int(f.Int()), true
 }

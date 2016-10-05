@@ -18,5 +18,4 @@ type UserParams struct {
 	PageOffset int      `json:"page_offset,omitempty"`
 	Q          string   `json:"q,omitempty"`
 	SortBy     string   `json:"sort_by,omitempty"`
-	With       []string `json:"with,omitempty"`
 }

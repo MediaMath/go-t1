@@ -20,7 +20,7 @@ type Organization struct {
 	Country            string        `json:"country,omitempty"`
 	CreatedOn          t1time.T1Time `json:"created_on,readonly"`
 	CurrencyCode       string        `json:"currency_code,omitempty"`
-	ID                 int           `json:"id,omitempty"`
+	ID                 int           `json:"id,omitempty,readonly"`
 	MMContactName      string        `json:"mm_contact_name,omitempty"`
 	Name               string        `json:"name,omitempty"`
 	OrgType            []string      `json:"org_type,omitempty"`

@@ -24,3 +24,45 @@ func TestExecuteRequestError(t *testing.T) {
 }
 
 // TODO more tests :/
+
+func TestGetIDWithoutIDFieldFalses(t *testing.T) {
+	type a struct {
+		NotID int
+	}
+	b := &a{}
+	id, valid := getIDOfObject(b)
+	if valid {
+		t.Errorf("getID with invalid object: want %v, got %v", false, valid)
+	}
+	if want, got := 0, id; want != got {
+		t.Errorf("getID zero field: want %d, got %d", want, got)
+	}
+}
+
+func TestGetIDWithIDFieldTrue(t *testing.T) {
+	type a struct {
+		ID int
+	}
+	b := &a{}
+	id, valid := getIDOfObject(b)
+	if !valid {
+		t.Errorf("getID with valid object: want %v, got %v", true, valid)
+	}
+	if want, got := 0, id; want != got {
+		t.Errorf("getID zero field: want %d, got %d", want, got)
+	}
+}
+
+func TestGetIDWithIDFieldNonZero(t *testing.T) {
+	type a struct {
+		ID int
+	}
+	b := &a{ID: 1}
+	id, valid := getIDOfObject(b)
+	if !valid {
+		t.Errorf("getID with valid object: want %v, got %v", true, valid)
+	}
+	if want, got := 1, id; want != got {
+		t.Errorf("getID non-zero field: want %d, got %d", want, got)
+	}
+}

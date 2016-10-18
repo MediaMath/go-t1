@@ -39,22 +39,16 @@ type EntityResponse struct {
 // the job of figuring out what kind of entity it is. Like with encoding/json,
 // it is the user's responsiblity to provide the correct type of object.
 func (s *EntityService) Get(id int, data interface{}) (Meta, error) {
-	buf := bufferPool.Get().(*bytes.Buffer)
+	buf, vals := bufferPool.Get().(*bytes.Buffer), valuesPool.Get().(url.Values)
 	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
+		putBufferBackInPool(buf)
+		putValuesBackInPool(vals)
 	}()
 
 	buf.WriteString(entityPath)
 	buf.WriteString(s.entityType)
 	buf.WriteByte('/')
 	buf.WriteString(strconv.Itoa(id))
-
-	vals := valuesPool.Get().(url.Values)
-	defer func() {
-		vals.Del("api_key")
-		valuesPool.Put(vals)
-	}()
 
 	// The only user param that matters when retrieving a single entity
 	// is with. If with isn't supported at all then this block isn't needed.
@@ -66,8 +60,10 @@ func (s *EntityService) Get(id int, data interface{}) (Meta, error) {
 	// }
 
 	vals.Set("api_key", s.client.APIKey)
+	buf.WriteByte('?')
+	buf.WriteString(vals.Encode())
 
-	req, err := s.client.NewRequest("GET", buf.String(), vals)
+	req, err := s.client.NewRequest("GET", buf.String(), nil)
 	if err != nil {
 		return Meta{}, err
 	}
@@ -107,12 +103,8 @@ func execute(req *http.Request, c *Client, data interface{}) (Meta, error) {
 func (s *EntityService) List(params *UserParams, data interface{}) (Meta, error) {
 	buf, vals := bufferPool.Get().(*bytes.Buffer), valuesPool.Get().(url.Values)
 	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
-		for key := range vals {
-			vals.Del(key)
-		}
-		valuesPool.Put(vals)
+		putBufferBackInPool(buf)
+		putValuesBackInPool(vals)
 	}()
 
 	buf.WriteString(entityPath)
@@ -141,12 +133,8 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 
 	buf, vals := bufferPool.Get().(*bytes.Buffer), valuesPool.Get().(url.Values)
 	defer func() {
-		buf.Reset()
-		bufferPool.Put(buf)
-		for key := range vals {
-			vals.Del(key)
-		}
-		valuesPool.Put(vals)
+		putBufferBackInPool(buf)
+		putValuesBackInPool(vals)
 	}()
 
 	buf.WriteString(entityPath)

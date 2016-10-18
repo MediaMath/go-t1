@@ -27,3 +27,15 @@ func init() {
 		},
 	}
 }
+
+func putBufferBackInPool(b *bytes.Buffer) {
+	b.Reset()
+	bufferPool.Put(b)
+}
+
+func putValuesBackInPool(v url.Values) {
+	for key := range v {
+		v.Del(key)
+	}
+	valuesPool.Put(v)
+}

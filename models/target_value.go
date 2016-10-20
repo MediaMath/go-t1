@@ -8,7 +8,7 @@ package models
 type TargetValue struct {
 	ChildCount        int    `json:"child_count"`
 	DimensionCode     string `json:"dimension_code"`
-	ID                int    `json:"id"`
+	ID                int    `json:"id,omitempty,readonly"`
 	IsTargetable      bool   `json:"is_targetable"`
 	Name              string `json:"name"`
 	TargetDimensionID int    `json:"target_dimension_id"`

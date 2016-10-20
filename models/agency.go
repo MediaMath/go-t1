@@ -13,7 +13,7 @@ type Agency struct {
 	AllowXAdvOptimization bool      `json:"allow_x_adv_optimization"`
 	AllowXAdvPixels       bool      `json:"allow_x_adv_pixels"`
 	CreatedOn             time.Time `json:"created_on"`
-	ID                    int       `json:"id"`
+	ID                    int       `json:"id,omitempty,readonly"`
 	Name                  string    `json:"name"`
 	OrganizationID        int       `json:"organization_id"`
 	Status                bool      `json:"status"`

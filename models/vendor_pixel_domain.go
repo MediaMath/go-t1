@@ -12,7 +12,7 @@ import (
 type VendorPixelDomain struct {
 	CreatedOn      time.Time `json:"created_on"`
 	Domain         string    `json:"domain"`
-	ID             int       `json:"id"`
+	ID             int       `json:"id,omitempty,readonly"`
 	Name           string    `json:"name"`
 	UpdatedOn      time.Time `json:"updated_on"`
 	VendorDomainID int       `json:"vendor_domain_id"`

@@ -26,7 +26,7 @@ type Strategy struct {
 	FrequencyInterval              string    `json:"frequency_interval"`
 	FrequencyType                  string    `json:"frequency_type"`
 	GoalType                       string    `json:"goal_type"`
-	ID                             int       `json:"id"`
+	ID                             int       `json:"id,omitempty,readonly"`
 	ImpressionCap                  int       `json:"impression_cap"`
 	MediaType                      string    `json:"media_type"`
 	Name                           string    `json:"name"`

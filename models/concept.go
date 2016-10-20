@@ -12,7 +12,7 @@ import (
 type Concept struct {
 	AdvertiserID int       `json:"advertiser_id"`
 	CreatedOn    time.Time `json:"created_on"`
-	ID           int       `json:"id"`
+	ID           int       `json:"id,omitempty,readonly"`
 	Name         string    `json:"name"`
 	Status       bool      `json:"status"`
 	UpdatedOn    time.Time `json:"updated_on"`

@@ -12,7 +12,7 @@ import (
 type SiteList struct {
 	CreatedOn        time.Time `json:"created_on"`
 	Filename         string    `json:"filename"`
-	ID               int       `json:"id"`
+	ID               int       `json:"id,omitempty,readonly"`
 	Name             string    `json:"name"`
 	OrganizationID   int       `json:"organization_id"`
 	Restriction      string    `json:"restriction"`

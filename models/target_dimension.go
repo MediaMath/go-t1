@@ -6,7 +6,7 @@ package models
 
 // TargetDimension represents a target_dimension object
 type TargetDimension struct {
-	ID         int    `json:"id"`
+	ID         int    `json:"id,omitempty,readonly"`
 	Name       string `json:"name"`
 	Version    int    `json:"version"`
 	EntityType string `json:"entity_type"`

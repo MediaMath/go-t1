@@ -12,7 +12,7 @@ import (
 type Creative struct {
 	AtomicCreativeID int       `json:"atomic_creative_id"`
 	CreatedOn        time.Time `json:"created_on"`
-	ID               int       `json:"id"`
+	ID               int       `json:"id,omitempty,readonly"`
 	LastModified     time.Time `json:"last_modified"`
 	Name             string    `json:"name"`
 	Tag              string    `json:"tag"`

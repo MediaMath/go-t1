@@ -16,7 +16,7 @@ type AudienceSegment struct {
 	CreatedOn        time.Time `json:"created_on"`
 	EntityType       string    `json:"entity_type"`
 	FullPath         string    `json:"full_path"`
-	ID               int       `json:"id"`
+	ID               int       `json:"id,omitempty,readonly"`
 	Name             string    `json:"name"`
 	Type             string    `json:"type"` // TODO ???
 	UpdatedOn        time.Time `json:"updated_on"`

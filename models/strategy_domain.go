@@ -12,7 +12,7 @@ import (
 type StrategyDomain struct {
 	CreatedOn   time.Time `json:"created_on"`
 	Domain      string    `json:"domain"`
-	ID          int       `json:"id"`
+	ID          int       `json:"id,omitempty,readonly"`
 	Name        string    `json:"name"`
 	Restriction string    `json:"restriction"`
 	StrategyID  int       `json:"strategy_id"`

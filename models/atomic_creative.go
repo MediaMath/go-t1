@@ -31,7 +31,7 @@ type AtomicCreative struct {
 	FileType             string    `json:"file_type"`
 	HasSound             bool      `json:"has_sound"`
 	Height               int       `json:"height"`
-	ID                   int       `json:"id"`
+	ID                   int       `json:"id,omitempty,readonly"`
 	IsHTTPS              bool      `json:"is_https"`
 	IsMultiCreative      bool      `json:"is_multi_creative"`
 	LastModified         time.Time `json:"last_modified"`

@@ -11,7 +11,7 @@ import (
 // Vertical represents a vertical object
 type Vertical struct {
 	CreatedOn  time.Time `json:"created_on"`
-	ID         int       `json:"id"`
+	ID         int       `json:"id,omitempty,readonly"`
 	Name       string    `json:"name"`
 	UpdatedOn  time.Time `json:"updated_on"`
 	Version    int       `json:"version"`

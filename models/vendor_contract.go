@@ -12,7 +12,7 @@ import (
 type VendorContract struct {
 	CampaignID    int       `json:"campaign_id"`
 	CreatedOn     time.Time `json:"created_on"`
-	ID            int       `json:"id"`
+	ID            int       `json:"id,omitempty,readonly"`
 	Name          string    `json:"name"`
 	Price         float32   `json:"price"`
 	RateCardType  string    `json:"rate_card_type"`

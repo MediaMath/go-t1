@@ -13,7 +13,7 @@ type VendorDomain struct {
 	AllowSubdomainMatch bool      `json:"allow_subdomain_match"`
 	CreatedOn           time.Time `json:"created_on"`
 	Domain              string    `json:"domain"`
-	ID                  int       `json:"id"`
+	ID                  int       `json:"id,omitempty,readonly"`
 	Name                string    `json:"name"`
 	UpdatedOn           time.Time `json:"updated_on"`
 	VendorID            int       `json:"vendor_id"`

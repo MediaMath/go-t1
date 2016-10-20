@@ -6,7 +6,7 @@ package models
 
 // AdServer represents an ad_server object
 type AdServer struct {
-	ID         int    `json:"id"`
+	ID         int    `json:"id,omitempty,readonly"`
 	Name       string `json:"name"`
 	Version    int    `json:"version"`
 	EntityType string `json:"entity_type"`

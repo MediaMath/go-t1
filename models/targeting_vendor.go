@@ -11,7 +11,7 @@ import (
 // TargetingVendor represents a targeting_vendor object
 type TargetingVendor struct {
 	CreatedOn             time.Time `json:"created_on"`
-	ID                    int       `json:"id"`
+	ID                    int       `json:"id,omitempty,readonly"`
 	Name                  string    `json:"name"`
 	NamespaceCode         string    `json:"namespace_code"`
 	OrganizationID        int       `json:"organization_id"`

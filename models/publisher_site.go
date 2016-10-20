@@ -11,7 +11,7 @@ import (
 // PublisherSite represents a publisher_site object
 type PublisherSite struct {
 	CreatedOn   time.Time `json:"created_on"`
-	ID          int       `json:"id"`
+	ID          int       `json:"id,omitempty,readonly"`
 	Name        string    `json:"name"`
 	PublisherID int       `json:"publisher_id"`
 	UpdatedOn   time.Time `json:"updated_on"`

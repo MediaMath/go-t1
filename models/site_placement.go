@@ -14,7 +14,7 @@ type SitePlacement struct {
 	CreatedOn         time.Time `json:"created_on"`
 	DealSource        string    `json:"deal_source"`
 	DisplayText       string    `json:"display_text"`
-	ID                int       `json:"id"`
+	ID                int       `json:"id,omitempty,readonly"`
 	MediaType         string    `json:"media_type"`
 	Name              string    `json:"name"`
 	PMPType           string    `json:"pmp_type"`

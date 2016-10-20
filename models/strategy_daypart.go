@@ -13,7 +13,7 @@ type StrategyDayPart struct {
 	CreatedOn  time.Time `json:"created_on"`
 	Days       string    `json:"days"`
 	EndHour    int       `json:"end_hour"`
-	ID         int       `json:"id"`
+	ID         int       `json:"id,omitempty,readonly"`
 	Name       string    `json:"name"`
 	StartHour  int       `json:"start_hour"`
 	Status     bool      `json:"status"`

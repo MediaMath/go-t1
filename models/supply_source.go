@@ -19,7 +19,7 @@ type SupplySource struct {
 	HasMobileDisplay         bool      `json:"has_mobile_display"`
 	HasMobileVideo           bool      `json:"has_mobile_video"`
 	HasVideo                 bool      `json:"has_video"`
-	ID                       int       `json:"id"`
+	ID                       int       `json:"id,omitempty,readonly"`
 	IsProservice             bool      `json:"is_proservice"`
 	MMSafe                   bool      `json:"mm_safe"`
 	Name                     string    `json:"name"`

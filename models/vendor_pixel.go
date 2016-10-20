@@ -12,7 +12,7 @@ import (
 type VendorPixel struct {
 	CreatedOn  time.Time `json:"created_on"`
 	CreativeID int       `json:"creative_id"`
-	ID         int       `json:"id"`
+	ID         int       `json:"id,omitempty,readonly"`
 	Name       string    `json:"name"`
 	SetBy      string    `json:"set_by"`
 	Tag        string    `json:"tag"`

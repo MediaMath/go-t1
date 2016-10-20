@@ -12,7 +12,7 @@ import (
 type StrategyTargetingSegment struct {
 	CreatedOn          time.Time `json:"created_on"`
 	GroupIdentifier    string    `json:"group_identifier"`
-	ID                 int       `json:"id"`
+	ID                 int       `json:"id,omitempty,readonly"`
 	Name               string    `json:"name"`
 	Operator           string    `json:"operator"`
 	Restriction        string    `json:"restriction"`

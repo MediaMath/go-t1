@@ -19,7 +19,7 @@ type Advertiser struct {
 	FrequencyAmount         int           `json:"frequency_amount"`
 	FrequencyInterval       string        `json:"frequency_interval"`
 	FrequencyType           string        `json:"frequency_type"`
-	ID                      int           `json:"id"`
+	ID                      int           `json:"id,omitempty,readonly"`
 	MinimizeMultiAds        bool          `json:"minimize_multi_ads"`
 	Name                    string        `json:"name"`
 	Status                  bool          `json:"status"`

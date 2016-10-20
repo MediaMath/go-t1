@@ -16,7 +16,7 @@ type CreativeApproval struct {
 	CreatedOn            time.Time `json:"created_on"`
 	CreativeImportFileID int       `json:"creative_import_file_id"`
 	ExternalIdentifier   string    `json:"external_identifier"`
-	ID                   int       `json:"id"`
+	ID                   int       `json:"id,omitempty,readonly"`
 	Name                 string    `json:"name"`
 	RejectedReason       string    `json:"rejected_reason"`
 	SupplySourceID       int       `json:"supply_source_id"`

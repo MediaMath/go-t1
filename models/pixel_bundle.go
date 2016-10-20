@@ -18,7 +18,7 @@ type PixelBundle struct {
 	CreatedOn            time.Time `json:"created_on"`
 	Eligible             bool      `json:"eligible"`
 	ExternalIdentifier   string    `json:"external_identifier"`
-	ID                   int       `json:"id"`
+	ID                   int       `json:"id,omitempty,readonly"`
 	Keywords             string    `json:"keywords"`
 	Name                 string    `json:"name"`
 	PixelType            string    `json:"pixel_type"`

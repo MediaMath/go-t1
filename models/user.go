@@ -19,7 +19,7 @@ type User struct {
 	EditMarginsAndPerformance bool      `json:"edit_margins_and_performance"`
 	Fax                       string    `json:"fax"`
 	FirstName                 string    `json:"first_name"`
-	ID                        int       `json:"id"`
+	ID                        int       `json:"id,omitempty,readonly"`
 	LabsEnableRMX             bool      `json:"labs_enable_rmx"`
 	LastLoginOn               time.Time `json:"last_login_on"`
 	LastName                  string    `json:"last_name"`

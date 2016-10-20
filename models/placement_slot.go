@@ -24,7 +24,7 @@ type PlacementSlot struct {
 	FrequencyInterval string    `json:"frequency_interval"`
 	FrequencyType     string    `json:"frequency_type"`
 	Height            int       `json:"height"`
-	ID                int       `json:"id"`
+	ID                int       `json:"id,omitempty,readonly"`
 	Name              string    `json:"name"`
 	PRMPubCeiling     float32   `json:"prm_pub_ceiling"`
 	PRMPubMarkup      float32   `json:"prm_pub_markup"`

@@ -17,7 +17,7 @@ type Deal struct {
 	DealSource     string    `json:"deal_source"`
 	Description    string    `json:"description"`
 	EndDatetime    time.Time `json:"end_datetime"`
-	ID             int       `json:"id"`
+	ID             int       `json:"id,omitempty,readonly"`
 	MediaType      string    `json:"media_type"`
 	Name           string    `json:"name"`
 	PartnerSourced bool      `json:"partner_sourced"`

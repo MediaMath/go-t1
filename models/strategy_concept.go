@@ -12,7 +12,7 @@ import (
 type StrategyConcept struct {
 	ConceptID  int       `json:"concept_id"`
 	CreatedOn  time.Time `json:"created_on"`
-	ID         int       `json:"id"`
+	ID         int       `json:"id,omitempty,readonly"`
 	Name       string    `json:"name"`
 	Status     bool      `json:"status"`
 	StrategyID int       `json:"strategy_id"`

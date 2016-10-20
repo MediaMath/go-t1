@@ -13,7 +13,7 @@ type Pixel struct {
 	BundleID       int       `json:"bundle_id"`
 	CreatedOn      time.Time `json:"created_on"`
 	Distributed    bool      `json:"distributed"`
-	ID             int       `json:"id"`
+	ID             int       `json:"id,omitempty,readonly"`
 	Name           string    `json:"name"`
 	PixelType      string    `json:"pixel_type"`
 	SupplySourceID int       `json:"supply_source_id"`

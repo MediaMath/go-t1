@@ -6,7 +6,7 @@ package models
 
 // StrategySupplySource represents a strategy_supply_source object
 type StrategySupplySource struct {
-	ID             int    `json:"id"`
+	ID             int    `json:"id,omitempty,readonly"`
 	Name           string `json:"name"`
 	StrategyID     int    `json:"strategy_id"`
 	SupplySourceID int    `json:"supply_source_id"`

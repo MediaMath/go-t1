@@ -18,7 +18,7 @@ type Vendor struct {
 	AdxVideoSSLApproved    bool      `json:"adx_video_ssl_approved"`
 	CreatedOn              time.Time `json:"created_on"`
 	Description            string    `json:"description"`
-	ID                     int       `json:"id"`
+	ID                     int       `json:"id,omitempty,readonly"`
 	IsEligible             bool      `json:"is_eligible"`
 	MMContractAvailable    bool      `json:"mm_contract_available"`
 	Name                   string    `json:"name"`

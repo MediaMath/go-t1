@@ -13,7 +13,7 @@ type PixelProvider struct {
 	AgencyID     int       `json:"agency_id"`
 	CreatedOn    time.Time `json:"created_on"`
 	ExecutionBy  string    `json:"execution_by"`
-	ID           int       `json:"id"`
+	ID           int       `json:"id,omitempty,readonly"`
 	Name         string    `json:"name"`
 	Status       bool      `json:"status"`
 	TaxonomyFile string    `json:"taxonomy_file"`

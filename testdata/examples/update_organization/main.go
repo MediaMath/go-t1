@@ -31,10 +31,19 @@ func main() {
 	}
 	fmt.Printf("Meta:\t%#v\nOrg:\t%#v\n", meta, org)
 
-	org.Name = org.Name + " updated"
+	oName := org.Name
+
+	org.Name = oName + " updated"
 	meta, err = t1Client.Organizations.Save(&org)
 	if err != nil {
 		log.Fatalf("update org error: %v", err)
 	}
-	fmt.Printf("Meta:\t%#v\nOrg:\t%#v\n", meta, org)
+	fmt.Printf("Meta:\t%#v\nNew Name:\t%#v\n", meta, org.Name)
+
+	org.Name = oName
+	meta, err = t1Client.Organizations.Save(&org)
+	if err != nil {
+		log.Fatalf("update org error: %v", err)
+	}
+	fmt.Printf("Meta:\t%#v\nNew Name:\t%#v\n", meta, org.Name)
 }

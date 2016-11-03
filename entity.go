@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -147,7 +146,6 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 	buf.WriteString(s.client.APIKey)
 
 	structToMapGivenValues(data, vals)
-	fmt.Println(data, vals, vals.Encode())
 
 	req, err := s.client.NewRequest("POST", buf.String(), vals)
 	if err != nil {

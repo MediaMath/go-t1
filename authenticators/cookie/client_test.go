@@ -152,3 +152,60 @@ func TestAuthError(t *testing.T) {
 		t.Errorf("dev inactive: want %v, got %v", exp, e)
 	}
 }
+
+func TestGetSessionOK(t *testing.T) {
+	setup()
+	conf := GetCredentialsFromEnv()
+	c, _ := New(conf, nil)
+
+	s := setupServer(200, "test/valid_login.json", "")
+	defer s.Close()
+
+	u, _ := url.Parse(s.URL)
+	data, err := GetSession(c, u)
+	if err != nil {
+		t.Errorf("session OK: %v", err)
+	}
+
+	if want, got := 1, data.UserID; want != got {
+		t.Errorf("user ID: want %v, got %v", want, got)
+	}
+
+	if want, got := "user", data.UserName; want != got {
+		t.Errorf("user name: want %v, got %v", want, got)
+	}
+
+	if want, got := "9d1f77a99dd2b805c425b575028e1a11b314cbe0", data.SessionID; want != got {
+		t.Errorf("session ID: want %v, got %v", want, got)
+	}
+
+	if want, got := time.Date(2016, time.June, 27, 16, 21, 48, 0, time.UTC), data.ServerTime; !want.Equal(got) {
+		t.Errorf("server time: want %s, got %s", want, got)
+	}
+
+	if want, got := time.Date(2016, time.June, 28, 16, 21, 48, 0, time.UTC), data.SessionExpires; !want.Equal(got) {
+		t.Errorf("server time: want %s, got %s", want, got)
+	}
+}
+
+func TestGetSessionAuthRequired(t *testing.T) {
+	setup()
+	conf := GetCredentialsFromEnv()
+	c, _ := New(conf, nil)
+
+	s := setupServer(401, "test/auth_required_session.json", "")
+	defer s.Close()
+
+	u, _ := url.Parse(s.URL)
+	data, err := GetSession(c, u)
+
+	if err == nil {
+		t.Error("session auth required: expected an error but got none")
+	} else if exp, e := "get session: authentication required", err.Error(); e != exp {
+		t.Errorf("session auth required: want %v, got %v", exp, e)
+	}
+
+	if data != nil {
+		t.Errorf("session auth required: got data instead of nil: %v", data)
+	}
+}

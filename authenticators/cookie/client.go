@@ -146,3 +146,86 @@ func SetSession(client *http.Client, sessionID string, baseURL *url.URL) error {
 	client.Jar.SetCookies(baseURL, []*http.Cookie{cookie})
 	return nil
 }
+
+// SessionData describes the essense of the data available from the adama
+// /session endpoint.
+type SessionData struct {
+	UserID         int
+	UserName       string
+	SessionID      string
+	ServerTime     time.Time
+	SessionExpires time.Time
+}
+
+// GetSession returns the essential parts of the adama /session resposne. This
+// can be used in conjunction with SetSession by apps to find out if the
+// session with which the customer arrived is valid and who that session
+// actually belongs to. Returns nil and an error if something goes wrong, or if
+// the session is not actually valid (auth_required response froma adama).
+func GetSession(client *http.Client, base *url.URL) (*SessionData, error) {
+	base.Path = "/api/v2.0/session"
+	req, err := http.NewRequest("GET", base.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Accept", mediaTypeJSON)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	type Meta struct {
+		Status string
+	}
+
+	type Session struct {
+		SessionID   string
+		CurrentTime string `json:"current_time"`
+		Expires     string
+	}
+
+	type Data struct {
+		EntityType string `json:"entity_type"`
+		Name       string
+		ID         int
+		Session    Session
+	}
+	type Content struct {
+		Data Data
+		Meta Meta
+	}
+
+	var content Content
+	if err := json.NewDecoder(resp.Body).Decode(&content); err != nil {
+		return nil, err
+	}
+
+	if content.Meta.Status == "auth_required" {
+
+		return nil, errors.New("get session: authentication required")
+	}
+
+	if content.Meta.Status != "ok" {
+		return nil, errors.New("get session: unknown error")
+	}
+
+	currentTime, err := time.Parse("2006-01-02T15:04:05", content.Data.Session.CurrentTime)
+	if err != nil {
+		return nil, err
+	}
+
+	expires, err := time.Parse("2006-01-02T15:04:05", content.Data.Session.Expires)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SessionData{
+		UserID:         content.Data.ID,
+		UserName:       content.Data.Name,
+		SessionID:      content.Data.Session.SessionID,
+		ServerTime:     currentTime,
+		SessionExpires: expires,
+	}, nil
+}

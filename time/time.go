@@ -14,7 +14,7 @@ const (
 	// decoding of time.Time values. it differs in that it doesn't have a
 	// colon in the time zone specifier, which is mandated by RFC3339, but
 	// not by ISO8601 (which this does adhere to).
-	T1Fmt = "\"2006-01-02T15:04:05Z0700\""
+	T1Fmt = "\"2006-01-02T15:04:05-0700\""
 )
 
 // T1Time is a time.Time type with a different JSON-parsing format.

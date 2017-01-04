@@ -17,7 +17,7 @@ type User struct {
 	EditCampaigns             bool          `json:"edit_campaigns"`
 	EditDataDefinition        bool          `json:"edit_data_definition"`
 	EditMarginsAndPerformance bool          `json:"edit_margins_and_performance"`
-	Email                     string        `json:"email"`
+	Email                     string        `json:"email,omitempty,readonly"`
 	Fax                       string        `json:"fax"`
 	FirstName                 string        `json:"first_name"`
 	ID                        int           `json:"id,omitempty,readonly"`

@@ -12,3 +12,4 @@ Submissions will be rejected if they cause existing tests to fail. New code cont
 ## Contributors
 
 - [Prasanna Swaminathan](https://github.com/pswaminathan)
+- [Aleksandr Pasechnik](https://github.com/apiarian)

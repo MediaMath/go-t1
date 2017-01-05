@@ -1,12 +1,11 @@
 go-t1
 =====
 
-go-t1 is a Go client for MediaMath's APIs. API Documentation is availble
-[on the developer portal](https://developer.mediamath.com/docs/TerminalOne_API_Overview).
+go-t1 is a Go client for MediaMath's APIs. API Documentation is available [on the developer portal](https://developer.mediamath.com/docs/TerminalOne_API_Overview).
 
 Reference: [![GoDoc](https://godoc.org/github.com/MediaMath/go-t1?status.svg)](https://godoc.org/github.com/MediaMath/go-t1)
 
-Godoc will have the reference whne this package is open-sourced. Until then, you can clone it locally and get a local version with `$ godoc -http ':8080'`, then navigating to [http://localhost:8080/pkg/github.com/MediaMath/go-t1/](http://localhost:8080/pkg/github.com/MediaMath/go-t1/)
+Godoc will have the reference when this package is open-sourced. Until then, clone it locally, set up a godoc server with `$ godoc -http ':8080'`, then navigate to [http://localhost:8080/pkg/github.com/MediaMath/go-t1/](http://localhost:8080/pkg/github.com/MediaMath/go-t1/)
 
 ## Table of Contents
 - [Installation](#installation)
@@ -46,10 +45,9 @@ To set up authentication, use an authenticator:
 	}
 ```
 
-The authenticators are just `*http.Client` objects that know how to authenticate. Currently cookie is provided, and OAuth2 will be supported soon as well.
+The authenticators are just `*http.Client` objects that know how to authenticate. Cookie is provided in the package `authenticators/cookie`, and OAuth2 is supported. To use OAuth2, use Google's [OAuth2 package](https://github.com/golang/oauth2), with a [MediaMath endpoint](https://github.com/golang/oauth2/blob/master/mediamath/mediamath.go). An example is provided in the `testdata/examples` directory.
 
-Construct a new client, then use the various services on the client to
-access different parts of the MediaMath API.
+Construct a new client, then use the various services on the client to access different parts of the MediaMath API.
 
 [embedmd]:# (testdata/examples/get_organization/main.go /.*Construct new t1/ /fmt.Printf\("Meta:.*\)/)
 ```go
@@ -66,7 +64,7 @@ access different parts of the MediaMath API.
 	fmt.Printf("Meta:\t%#v\nOrg:\t%#v\n", meta, org)
 ```
 
-This whole example is available in the testdata/examples directory as get_organiztion.go.
+This whole example is available in the `testdata/examples/get_organization` directory.
 
 ## Time Types
 

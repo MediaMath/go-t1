@@ -15,7 +15,7 @@ package t1
 // limitations under the License.
 
 import (
-	"github.com/MediaMath/go-t1/time"
+	"go-t1/time"
 )
 
 // Meta is a struct of the metadata returned by some of the APIs.

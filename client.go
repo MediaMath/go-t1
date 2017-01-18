@@ -289,19 +289,13 @@ func generateUserAgentString() string {
 func (c *Client) Session() (Session, error) {
 	var s Session
 	u := entityPath + "session?api_key=" + c.APIKey
-	r, err := c.NewRequest("GET", u, nil)
+	req, err := c.NewRequest("GET", u, nil)
 	if err != nil {
 		return s, err
 	}
-	defer func() {
-		// Let the Transport reuse the connection
-		// cf. https://github.com/google/go-github/pull/317
-		io.CopyN(ioutil.Discard, r.Body, 512)
-		r.Body.Close()
-	}()
 
 	var resp EntityResponse
-	err = json.NewDecoder(r.Body).Decode(&resp)
+	_, err = c.Do(req, &resp)
 	if err != nil {
 		return s, err
 	}

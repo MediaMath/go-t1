@@ -284,3 +284,14 @@ func generateUserAgentString() string {
 	return fmt.Sprintf("go-t1/%d.%d.%d %s", versionMajor, versionMinor,
 		versionPatch, version)
 }
+
+// Session retrieves the session information of the client.
+func (c *Client) Session() (Session, error) {
+	var s Session
+	u := entityPath + "session?api_key=" + c.APIKey
+	_, err := c.NewRequest("GET", u, nil)
+	if err != nil {
+		return s, err
+	}
+	return s, nil
+}

@@ -38,12 +38,16 @@ func TestNotJSONEncodableTime(t *testing.T) {
 }
 
 func TestUnmarshal(t *testing.T) {
-	data := `{"Time": "2016-01-01T00:00:00+0000"}`
+	data := `{"Time": "2016-01-02T11:15:35+0600"}`
 	type A struct {
 		Time T1Time
 	}
 	var a A
 	if err := json.Unmarshal([]byte(data), &a); err != nil {
 		t.Error(err)
+	}
+	want := time.Date(2016, time.January, 2, 11, 15, 35, 0, time.FixedZone("+0600", 60*60*6))
+	if got := time.Time(a.Time); !got.Equal(want) {
+		t.Errorf("Time unmarshal: got %v, want %v", got, want)
 	}
 }

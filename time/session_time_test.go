@@ -17,15 +17,20 @@ package t1time
 import (
 	"encoding/json"
 	"testing"
+	"time"
 )
 
 func TestUnmarshalSession(t *testing.T) {
-	data := `{"Time": "2016-01-01T00:00:00"}`
+	data := `{"Time": "2016-01-02T11:15:35"}`
 	type A struct {
 		Time SessionTime
 	}
 	var a A
 	if err := json.Unmarshal([]byte(data), &a); err != nil {
 		t.Error(err)
+	}
+	want := time.Date(2016, time.January, 2, 11, 15, 35, 0, time.UTC)
+	if got := time.Time(a.Time); got != want {
+		t.Errorf("Time unmarshal: got %v, want %v", got, want)
 	}
 }

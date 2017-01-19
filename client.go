@@ -300,6 +300,10 @@ func (c *Client) Session() (Session, error) {
 		return s, err
 	}
 
+	if resp.Data == nil {
+		return s, fmt.Errorf("Session: %v", resp.Meta.Status)
+	}
+
 	err = json.Unmarshal(resp.Data, &s)
 	if err != nil && err != io.EOF {
 		return s, err

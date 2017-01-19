@@ -1,0 +1,15 @@
+{
+   "data" : {
+      "session" : {
+         "current_time" : "2017-01-19T19:25:17",
+         "sessionid" : "eb95cf52c2ee37cae89d9f21d4cbe7689431f96a",
+         "expires" : "2017-01-20T19:25:17"
+      },
+      "entity_type" : "user",
+      "name" : "myusername",
+      "id" : 123456789
+   },
+   "meta" : {
+      "status" : "ok"
+   }
+}

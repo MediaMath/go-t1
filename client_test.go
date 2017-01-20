@@ -17,10 +17,12 @@ package t1
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"reflect"
 	"runtime"
 	"strings"
@@ -370,5 +372,59 @@ func TestDo_noContent(t *testing.T) {
 
 	if err != nil {
 		t.Fatalf("Do returned unexpected error: %v", err)
+	}
+}
+
+func TestSession_validSession(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc(entityPath+"session", func(w http.ResponseWriter, r *http.Request) {
+		f, err := os.Open("testdata/fixtures/session_valid.json")
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		w.Header().Set("Content-Type", mediaTypeJSON)
+		w.WriteHeader(200)
+		io.Copy(w, f)
+	})
+
+	ses, err := client.Session()
+	if err != nil {
+		t.Fatalf("Session returned unexpected error: %v", err)
+	}
+	if got, want := ses.SessionID, "eb95cf52c2ee37cae89d9f21d4cbe7689431f96a"; got != want {
+		t.Errorf("Session SessionID: got %v, want %v", got, want)
+	}
+	if got, want := ses.UserName, "myusername"; got != want {
+		t.Errorf("Session UserName: got %v, want %v", got, want)
+	}
+}
+
+func TestSession_authRequired(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc(entityPath+"session", func(w http.ResponseWriter, r *http.Request) {
+		f, err := os.Open("testdata/fixtures/session_auth_required.json")
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		w.Header().Set("Content-Type", mediaTypeJSON)
+		w.WriteHeader(200)
+		io.Copy(w, f)
+	})
+
+	ses, err := client.Session()
+	if err == nil {
+		t.Fatal("Session: expected error, received none")
+	}
+	if got, want := err.Error(), "Session: auth_required"; got != want {
+		t.Errorf("Session error: got %v, want %v", got, want)
+	}
+	if got, want := ses, (Session{}); !reflect.DeepEqual(got, want) {
+		t.Errorf("Session Error Session: got %+v, want %+v", got, want)
 	}
 }

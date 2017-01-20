@@ -20,34 +20,17 @@ import (
 	"time"
 )
 
-var notJSONEncodableTimes = []struct {
-	time T1Time
-	want string
-}{
-	{T1Time(time.Date(10000, 1, 1, 0, 0, 0, 0, time.UTC)), "Time.MarshalJSON: year outside of range [0,9999]"},
-	{T1Time(time.Date(-1, 1, 1, 0, 0, 0, 0, time.UTC)), "Time.MarshalJSON: year outside of range [0,9999]"},
-}
-
-func TestNotJSONEncodableTime(t *testing.T) {
-	for _, tt := range notJSONEncodableTimes {
-		_, err := tt.time.MarshalJSON()
-		if err == nil || err.Error() != tt.want {
-			t.Errorf("%v MarshalJSON error = %v, want %v", tt.time, err, tt.want)
-		}
-	}
-}
-
-func TestUnmarshal(t *testing.T) {
-	data := `{"Time": "2016-01-02T11:15:35+0600"}`
+func TestUnmarshalSession(t *testing.T) {
+	data := `{"Time": "2016-01-02T11:15:35"}`
 	type A struct {
-		Time T1Time
+		Time SessionTime
 	}
 	var a A
 	if err := json.Unmarshal([]byte(data), &a); err != nil {
 		t.Error(err)
 	}
-	want := time.Date(2016, time.January, 2, 11, 15, 35, 0, time.FixedZone("+0600", 60*60*6))
-	if got := time.Time(a.Time); !got.Equal(want) {
+	want := time.Date(2016, time.January, 2, 11, 15, 35, 0, time.UTC)
+	if got := time.Time(a.Time); got != want {
 		t.Errorf("Time unmarshal: got %v, want %v", got, want)
 	}
 }

@@ -19,35 +19,28 @@ import (
 )
 
 const (
-	// T1Fmt is the time layout used by Adama. It is most similar to
-	// RFC3339, which is the standard used by encoding/json for encoding and
-	// decoding of time.Time values. it differs in that it doesn't have a
-	// colon in the time zone specifier, which is mandated by RFC3339, but
-	// not by ISO8601 (which this does adhere to).
-	T1Fmt = "\"2006-01-02T15:04:05Z0700\""
+	// sessionFmt is the time layout used by the /session endpoint.
+	// It is an ISO8601-compatible format without a time zone specifier.
+	sessionFmt = "\"2006-01-02T15:04:05\""
 )
 
-// T1Time is a time.Time type with a different JSON-parsing format.
-type T1Time time.Time
+// SessionTime is a time.Time type with a different JSON-parsing format.
+// SessionTime implements the json.Unmarshaler interface,
+// but *not* json.Marshaler. We should never be marshaling a session time:
+// it only exists for the /session endpoint, which is GET-only
+type SessionTime time.Time
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
 // The time is expected to be a quoted string in RFC 3339 format,
-// except without the colon in the time zone specifier.
-func (t *T1Time) UnmarshalJSON(data []byte) error {
+// except without a time zone specifier.
+func (t *SessionTime) UnmarshalJSON(data []byte) error {
 	// Fractional seconds are handled implicitly by Parse
-	val, err := time.Parse(T1Fmt, string(data))
-	*t = T1Time(val)
+	val, err := time.Parse(sessionFmt, string(data))
+	*t = SessionTime(val)
 	return err
 }
 
 // String fulfills the Stringer interface.
-func (t T1Time) String() string {
+func (t SessionTime) String() string {
 	return time.Time(t).Format("2006-01-02 15:04:05.999999999 -0700 MST")
-}
-
-// MarshalJSON fulfills the Marshaler interface for T1Time.
-func (t T1Time) MarshalJSON() ([]byte, error) {
-	// T1 *accepts* times as RFC3339 (that is, with the colon in the time
-	// zone specifier). So we can just delegate to the standard.
-	return time.Time(t).MarshalJSON()
 }

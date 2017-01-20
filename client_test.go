@@ -88,36 +88,39 @@ func TestNewClient_services(t *testing.T) {
 		service *EntityService
 		name    string
 	}{
-		{c.Advertisers, "Advertisers"},
-		{c.AtomicCreatives, "AtomicCreatives"},
-		{c.Agencies, "Agencies"},
-		{c.AdServers, "AdServers"},
-		{c.Campaigns, "Campaigns"},
-		{c.Concepts, "Concepts"},
-		{c.Creatives, "Creatives"},
-		{c.Deals, "Deals"},
-		{c.Organizations, "Organizations"},
-		{c.Pixels, "Pixels"},
-		{c.PixelBundles, "PixelBundles"},
-		{c.PixelProviders, "PixelProviders"},
-		{c.PlacementSlots, "PlacementSlots"},
-		{c.Publishers, "Publishers"},
-		{c.PublisherSites, "PublisherSites"},
-		{c.SitePlacements, "SitePlacements"},
-		{c.SiteLists, "SiteLists"},
-		{c.Strategies, "Strategies"},
-		{c.SupplySources, "SupplySources"},
-		{c.Users, "Users"},
-		{c.Vendors, "Vendors"},
-		{c.VendorContracts, "VendorContracts"},
-		{c.VendorDomains, "VendorDomains"},
-		{c.VendorPixels, "VendorPixels"},
-		{c.VendorPixelDomains, "VendorPixelDomains"},
-		{c.Verticals, "Verticals"},
+		{c.Advertisers, "advertisers"},
+		{c.AtomicCreatives, "atomic_creatives"},
+		{c.Agencies, "agencies"},
+		{c.AdServers, "ad_servers"},
+		{c.Campaigns, "campaigns"},
+		{c.Concepts, "concepts"},
+		{c.Creatives, "creatives"},
+		{c.Deals, "deals"},
+		{c.Organizations, "organizations"},
+		{c.Pixels, "pixels"},
+		{c.PixelBundles, "pixel_bundles"},
+		{c.PixelProviders, "pixel_providers"},
+		{c.PlacementSlots, "placement_slots"},
+		{c.Publishers, "publishers"},
+		{c.PublisherSites, "publisher_sites"},
+		{c.SitePlacements, "site_placements"},
+		{c.SiteLists, "site_lists"},
+		{c.Strategies, "strategies"},
+		{c.SupplySources, "supply_sources"},
+		{c.Users, "users"},
+		{c.Vendors, "vendors"},
+		{c.VendorContracts, "vendor_contracts"},
+		{c.VendorDomains, "vendor_domains"},
+		{c.VendorPixels, "vendor_pixels"},
+		{c.VendorPixelDomains, "vendor_pixel_domains"},
+		{c.Verticals, "verticals"},
 	}
 	for _, test := range serviceNames {
 		if test.service == nil {
 			t.Errorf("%s service: got nil, expected non-nil", test.name)
+		}
+		if got, want := test.service.entityType, test.name; got != want {
+			t.Errorf("service name: got %v, want %v", got, want)
 		}
 	}
 }

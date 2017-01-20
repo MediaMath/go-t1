@@ -3,7 +3,7 @@ By contributing you agree that your contributions will be licensed under the go-
 
 ## Code Style
 
-golint and gofmt should be run on all submitted code contributions. The standard copyright header should be included in all new source files.
+`golint`, `go vet`, and `gofmt` should be run on all submitted code contributions. The standard copyright header should be included in all new source files.
 
 ## Tests
 

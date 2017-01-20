@@ -59,15 +59,6 @@ func teardown() {
 	server.Close()
 }
 
-func testURLParseError(t *testing.T, err error) {
-	if err == nil {
-		t.Errorf("Expected error to be returned")
-	}
-	if err, ok := err.(*url.Error); !ok || err.Op != "parse" {
-		t.Errorf("Expected URL parse error, got %+v", err)
-	}
-}
-
 func TestNewClient(t *testing.T) {
 	c := NewClient(nil, "myapikey", nil)
 
@@ -171,7 +162,20 @@ func TestNewRequest(t *testing.T) {
 func TestNewRequest_badURL(t *testing.T) {
 	c := NewClient(nil, "", nil)
 	_, err := c.NewRequest("GET", ":", nil)
-	testURLParseError(t, err)
+	if err == nil {
+		t.Error("NewRequest bad URL: expected error, got none")
+	}
+	if err, ok := err.(*url.Error); !ok || err.Op != "parse" {
+		t.Errorf("Expected URL parse error, got %+v", err)
+	}
+}
+
+func TestNewRequest_badMethod(t *testing.T) {
+	c := NewClient(nil, "", nil)
+	_, err := c.NewRequest(":get", "/foo", nil)
+	if err == nil {
+		t.Error("NewRequest bad method: expected error, got none")
+	}
 }
 
 // If a nil body is passed to client.NewRequest, make sure that nil is also
@@ -310,6 +314,71 @@ func TestDo_rateLimit_rateLimitError(t *testing.T) {
 	}
 }
 
+// Ensure rate limit parsing works as expected
+func TestDo_rateLimit_badHeaders(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/nodate", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", "")
+		w.Header().Add("Retry-After", "1")
+		w.Header().Add("Content-Type", mediaTypeMashery)
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Fprintln(w, `<h1>Developer Over Qps</h1>`)
+	})
+	mux.HandleFunc("/noretry", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", "Mon, 02 Jan 2016 15:04:05 GMT")
+		w.Header().Add("Retry-After", "")
+		w.Header().Add("Content-Type", mediaTypeMashery)
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Fprintln(w, `<h1>Developer Over Qps</h1>`)
+	})
+	mux.HandleFunc("/baddate", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", "notarealdate")
+		w.Header().Add("Retry-After", "1")
+		w.Header().Add("Content-Type", mediaTypeMashery)
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Fprintln(w, `<h1>Developer Over Qps</h1>`)
+	})
+	mux.HandleFunc("/badretry", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Date", "Mon, 02 Jan 2016 15:04:05 GMT")
+		w.Header().Add("Retry-After", "notanint")
+		w.Header().Add("Content-Type", mediaTypeMashery)
+		w.Header().Add(headerMasheryError, masheryErrorCodeRateLimit)
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Fprintln(w, `<h1>Developer Over Qps</h1>`)
+	})
+
+	tests := []struct {
+		url   string
+		reset time.Time
+	}{
+		{"/nodate", time.Time{}},
+		{"/noretry", time.Time{}},
+		{"/baddate", time.Time{}},
+		{"/badretry", time.Date(2016, 1, 2, 15, 4, 5, 0, time.UTC)},
+	}
+
+	for _, test := range tests {
+		req, _ := client.NewRequest("GET", test.url, nil)
+		_, err := client.Do(req, nil)
+
+		if err == nil {
+			t.Fatal("Expected error to be returned.")
+		}
+		rateLimitErr, ok := err.(*RateLimitError)
+		if !ok {
+			t.Fatalf("Expected a *RateLimitError error; got %#v.", err)
+		}
+		if got, want := rateLimitErr.RetryAt.UTC(), test.reset; !got.Equal(want) {
+			t.Errorf("rateLimitErr rate reset: got %v, want %v", got, want)
+		}
+	}
+}
+
 // Ensure a network call is not made when it's known that API rate limit is still exceeded.
 func TestDo_rateLimit_noNetworkCall(t *testing.T) {
 	setup()
@@ -354,6 +423,30 @@ func TestDo_rateLimit_noNetworkCall(t *testing.T) {
 	}
 	if got := rateLimitErr.RetryAt.UTC(); got != reset {
 		t.Errorf("rateLimitErr rate reset: got %v, want %v", got, reset)
+	}
+}
+
+func TestRateLimit_resetRateLimit(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	var body json.RawMessage
+
+	reset := time.Now().Add(-1 * time.Second)
+	client.RateLimitReset = reset
+
+	req, _ := client.NewRequest("GET", "/", nil)
+	_, err := client.Do(req, &body)
+
+	if err != nil {
+		t.Errorf("Do returned unexpected error: %v", err)
+	}
+	if got, want := client.RateLimitReset, nullTime; got != want {
+		t.Errorf("RateLimitReset post-reset: got %v, want %v", got, want)
 	}
 }
 

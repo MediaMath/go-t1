@@ -64,7 +64,7 @@ Construct a new client, then use the various services on the client to access di
 	fmt.Printf("Meta:\t%#v\nOrg:\t%#v\n", meta, org)
 ```
 
-This whole example is available in the `testdata/examples/get_organization` directory.
+This whole example is available in the `testdata/examples/get_organization` directory. The `testdata/examples` directory also has examples of listing, creating, and updating entities.
 
 ## Time Types
 

@@ -36,19 +36,19 @@ func setup() {
 }
 
 func setupServer(statusCode int, filename, cType string) *httptest.Server {
-	hf := http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+	hf := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		f, err := os.Open(filename)
 		if err != nil {
 			panic(err)
 		}
 		defer f.Close()
 		if cType == "" {
-			rw.Header().Set("Content-Type", mediaTypeJSON)
+			w.Header().Set("Content-Type", mediaTypeJSON)
 		} else {
-			rw.Header().Set("Content-Type", cType)
+			w.Header().Set("Content-Type", cType)
 		}
-		rw.WriteHeader(statusCode)
-		io.Copy(rw, f)
+		w.WriteHeader(statusCode)
+		io.Copy(w, f)
 	})
 
 	return httptest.NewServer(hf)
@@ -119,7 +119,7 @@ func TestValidLogin(t *testing.T) {
 	conf := GetCredentialsFromEnv()
 	c, _ := New(conf, nil)
 
-	s := setupServer(200, "test/valid_login.json", "")
+	s := setupServer(200, "testdata/valid_login.json", "")
 	defer s.Close()
 
 	u, _ := url.Parse(s.URL)
@@ -134,7 +134,7 @@ func TestDeveloperInactive(t *testing.T) {
 	conf := GetCredentialsFromEnv()
 	c, _ := New(conf, nil)
 
-	s := setupServer(403, "test/invalid_developerinactive.html", "text/xml")
+	s := setupServer(403, "testdata/invalid_developerinactive.html", "text/xml")
 	defer s.Close()
 
 	u, _ := url.Parse(s.URL)
@@ -151,7 +151,7 @@ func TestAuthError(t *testing.T) {
 	conf := GetCredentialsFromEnv()
 	c, _ := New(conf, nil)
 
-	s := setupServer(401, "test/invalid_autherror.json", "")
+	s := setupServer(401, "testdata/invalid_autherror.json", "")
 	defer s.Close()
 
 	u, _ := url.Parse(s.URL)

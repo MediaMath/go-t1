@@ -12,7 +12,7 @@ func TestNotFound(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		f, err := os.Open("testdata/error_not_found.json")
+		f, err := os.Open("testdata/fixtures/error_not_found.json")
 		if err != nil {
 			t.Fatalf("not found open fixture: %v", err)
 		}
@@ -48,7 +48,7 @@ func TestBadRequest_fieldError(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		f, err := os.Open("testdata/error_bad_request_field_error.json")
+		f, err := os.Open("testdata/fixtures/error_bad_request_field_error.json")
 		if err != nil {
 			t.Fatalf("not found open fixture: %v", err)
 		}

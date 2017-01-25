@@ -15,21 +15,21 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // StrategyTargetingSegment represents a strategy_targeting_segment object
 type StrategyTargetingSegment struct {
-	CreatedOn          time.Time `json:"created_on"`
-	GroupIdentifier    string    `json:"group_identifier"`
-	ID                 int       `json:"id,omitempty,readonly"`
-	Name               string    `json:"name"`
-	Operator           string    `json:"operator"`
-	Restriction        string    `json:"restriction"`
-	StrategyID         int       `json:"strategy_id"`
-	TargetingSegmentID int       `json:"targeting_segment_id"`
-	UpdatedOn          time.Time `json:"updated_on"`
-	UserCPM            float32   `json:"user_cpm"`
-	Version            int       `json:"version"`
-	EntityType         string    `json:"entity_type"`
+	CreatedOn          t1time.T1Time `json:"created_on"`
+	GroupIdentifier    string        `json:"group_identifier"`
+	ID                 int           `json:"id,omitempty,readonly"`
+	Name               string        `json:"name"`
+	Operator           string        `json:"operator"`
+	Restriction        string        `json:"restriction"`
+	StrategyID         int           `json:"strategy_id"`
+	TargetingSegmentID int           `json:"targeting_segment_id"`
+	UpdatedOn          t1time.T1Time `json:"updated_on"`
+	UserCPM            float32       `json:"user_cpm"`
+	Version            int           `json:"version"`
+	EntityType         string        `json:"entity_type"`
 }

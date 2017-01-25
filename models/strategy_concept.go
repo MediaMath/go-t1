@@ -15,19 +15,19 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // StrategyConcept represents a strategy_concept object
 type StrategyConcept struct {
-	ConceptID  int       `json:"concept_id"`
-	CreatedOn  time.Time `json:"created_on"`
-	ID         int       `json:"id,omitempty,readonly"`
-	Name       string    `json:"name"`
-	Status     bool      `json:"status"`
-	StrategyID int       `json:"strategy_id"`
-	UpdatedOn  time.Time `json:"updated_on"`
-	Version    int       `json:"version"`
-	Weighting  string    `json:"weighting"`
-	EntityType string    `json:"entity_type"`
+	ConceptID  int           `json:"concept_id"`
+	CreatedOn  t1time.T1Time `json:"created_on"`
+	ID         int           `json:"id,omitempty,readonly"`
+	Name       string        `json:"name"`
+	Status     bool          `json:"status"`
+	StrategyID int           `json:"strategy_id"`
+	UpdatedOn  t1time.T1Time `json:"updated_on"`
+	Version    int           `json:"version"`
+	Weighting  string        `json:"weighting"`
+	EntityType string        `json:"entity_type"`
 }

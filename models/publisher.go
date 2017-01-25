@@ -15,16 +15,16 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // Publisher represents a publisher object
 type Publisher struct {
-	CreatedOn      time.Time `json:"created_on"`
-	ID             int       `json:"id,omitempty,readonly"`
-	Name           string    `json:"name"`
-	OrganizationID int       `json:"organization_id"`
-	UpdatedOn      time.Time `json:"updated_on"`
-	Version        int       `json:"version"`
-	EntityType     string    `json:"entity_type"`
+	CreatedOn      t1time.T1Time `json:"created_on"`
+	ID             int           `json:"id,omitempty,readonly"`
+	Name           string        `json:"name"`
+	OrganizationID int           `json:"organization_id"`
+	UpdatedOn      t1time.T1Time `json:"updated_on"`
+	Version        int           `json:"version"`
+	EntityType     string        `json:"entity_type"`
 }

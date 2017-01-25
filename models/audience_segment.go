@@ -15,20 +15,20 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // AudienceSegment represents an audience_segment object
 type AudienceSegment struct {
-	AudienceVendorID int       `json:"audience_vendor_id"`
-	Buyable          bool      `json:"buyable"`
-	ChildCount       int       `json:"child_count"`
-	CreatedOn        time.Time `json:"created_on"`
-	EntityType       string    `json:"entity_type"`
-	FullPath         string    `json:"full_path"`
-	ID               int       `json:"id,omitempty,readonly"`
-	Name             string    `json:"name"`
-	Type             string    `json:"type"` // TODO ???
-	UpdatedOn        time.Time `json:"updated_on"`
-	Version          int       `json:"version"`
+	AudienceVendorID int           `json:"audience_vendor_id"`
+	Buyable          bool          `json:"buyable"`
+	ChildCount       int           `json:"child_count"`
+	CreatedOn        t1time.T1Time `json:"created_on"`
+	EntityType       string        `json:"entity_type"`
+	FullPath         string        `json:"full_path"`
+	ID               int           `json:"id,omitempty,readonly"`
+	Name             string        `json:"name"`
+	Type             string        `json:"type"` // TODO ???
+	UpdatedOn        t1time.T1Time `json:"updated_on"`
+	Version          int           `json:"version"`
 }

@@ -15,18 +15,18 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // StrategyDomain represents a strategy_domain object
 type StrategyDomain struct {
-	CreatedOn   time.Time `json:"created_on"`
-	Domain      string    `json:"domain"`
-	ID          int       `json:"id,omitempty,readonly"`
-	Name        string    `json:"name"`
-	Restriction string    `json:"restriction"`
-	StrategyID  int       `json:"strategy_id"`
-	UpdatedOn   time.Time `json:"updated_on"`
-	Version     int       `json:"version"`
-	EntityType  string    `json:"entity_type"`
+	CreatedOn   t1time.T1Time `json:"created_on"`
+	Domain      string        `json:"domain"`
+	ID          int           `json:"id,omitempty,readonly"`
+	Name        string        `json:"name"`
+	Restriction string        `json:"restriction"`
+	StrategyID  int           `json:"strategy_id"`
+	UpdatedOn   t1time.T1Time `json:"updated_on"`
+	Version     int           `json:"version"`
+	EntityType  string        `json:"entity_type"`
 }

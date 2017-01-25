@@ -15,18 +15,18 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // VendorPixelDomain represents a vendor_pixel_domain object
 type VendorPixelDomain struct {
-	CreatedOn      time.Time `json:"created_on"`
-	Domain         string    `json:"domain"`
-	ID             int       `json:"id,omitempty,readonly"`
-	Name           string    `json:"name"`
-	UpdatedOn      time.Time `json:"updated_on"`
-	VendorDomainID int       `json:"vendor_domain_id"`
-	VendorPixelID  int       `json:"vendor_pixel_id"`
-	Version        int       `json:"version"`
-	EntityType     string    `json:"entity_type"`
+	CreatedOn      t1time.T1Time `json:"created_on"`
+	Domain         string        `json:"domain"`
+	ID             int           `json:"id,omitempty,readonly"`
+	Name           string        `json:"name"`
+	UpdatedOn      t1time.T1Time `json:"updated_on"`
+	VendorDomainID int           `json:"vendor_domain_id"`
+	VendorPixelID  int           `json:"vendor_pixel_id"`
+	Version        int           `json:"version"`
+	EntityType     string        `json:"entity_type"`
 }

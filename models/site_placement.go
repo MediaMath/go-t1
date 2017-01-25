@@ -15,21 +15,21 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // SitePlacement represents a site_placement object
 type SitePlacement struct {
-	BillMediaToClient bool      `json:"bill_media_to_client"`
-	CreatedOn         time.Time `json:"created_on"`
-	DealSource        string    `json:"deal_source"`
-	DisplayText       string    `json:"display_text"`
-	ID                int       `json:"id,omitempty,readonly"`
-	MediaType         string    `json:"media_type"`
-	Name              string    `json:"name"`
-	PMPType           string    `json:"pmp_type"`
-	PublisherSiteID   int       `json:"publisher_site_id"`
-	UpdatedOn         time.Time `json:"updated_on"`
-	Version           int       `json:"version"`
-	EntityType        string    `json:"entity_type"`
+	BillMediaToClient bool          `json:"bill_media_to_client"`
+	CreatedOn         t1time.T1Time `json:"created_on"`
+	DealSource        string        `json:"deal_source"`
+	DisplayText       string        `json:"display_text"`
+	ID                int           `json:"id,omitempty,readonly"`
+	MediaType         string        `json:"media_type"`
+	Name              string        `json:"name"`
+	PMPType           string        `json:"pmp_type"`
+	PublisherSiteID   int           `json:"publisher_site_id"`
+	UpdatedOn         t1time.T1Time `json:"updated_on"`
+	Version           int           `json:"version"`
+	EntityType        string        `json:"entity_type"`
 }

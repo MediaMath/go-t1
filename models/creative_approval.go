@@ -15,22 +15,22 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // CreativeApproval represents a creative_approval object
 type CreativeApproval struct {
-	AdditionalDetail     int       `json:"additional_detail"`
-	ApprovalStatus       int       `json:"approval_status"`
-	AtomicCreativeID     int       `json:"atomic_creative_id"`
-	CreatedOn            time.Time `json:"created_on"`
-	CreativeImportFileID int       `json:"creative_import_file_id"`
-	ExternalIdentifier   string    `json:"external_identifier"`
-	ID                   int       `json:"id,omitempty,readonly"`
-	Name                 string    `json:"name"`
-	RejectedReason       string    `json:"rejected_reason"`
-	SupplySourceID       int       `json:"supply_source_id"`
-	UpdatedOn            time.Time `json:"updated_on"`
-	Version              int       `json:"version"`
-	EntityType           string    `json:"entity_type"`
+	AdditionalDetail     int           `json:"additional_detail"`
+	ApprovalStatus       int           `json:"approval_status"`
+	AtomicCreativeID     int           `json:"atomic_creative_id"`
+	CreatedOn            t1time.T1Time `json:"created_on"`
+	CreativeImportFileID int           `json:"creative_import_file_id"`
+	ExternalIdentifier   string        `json:"external_identifier"`
+	ID                   int           `json:"id,omitempty,readonly"`
+	Name                 string        `json:"name"`
+	RejectedReason       string        `json:"rejected_reason"`
+	SupplySourceID       int           `json:"supply_source_id"`
+	UpdatedOn            t1time.T1Time `json:"updated_on"`
+	Version              int           `json:"version"`
+	EntityType           string        `json:"entity_type"`
 }

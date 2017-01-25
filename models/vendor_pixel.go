@@ -15,19 +15,19 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // VendorPixel represents a vendor_pixel object
 type VendorPixel struct {
-	CreatedOn  time.Time `json:"created_on"`
-	CreativeID int       `json:"creative_id"`
-	ID         int       `json:"id,omitempty,readonly"`
-	Name       string    `json:"name"`
-	SetBy      string    `json:"set_by"`
-	Tag        string    `json:"tag"`
-	TagType    string    `json:"tag_type"`
-	UpdatedOn  time.Time `json:"updated_on"`
-	Version    int       `json:"version"`
-	EntityType string    `json:"entity_type"`
+	CreatedOn  t1time.T1Time `json:"created_on"`
+	CreativeID int           `json:"creative_id"`
+	ID         int           `json:"id,omitempty,readonly"`
+	Name       string        `json:"name"`
+	SetBy      string        `json:"set_by"`
+	Tag        string        `json:"tag"`
+	TagType    string        `json:"tag_type"`
+	UpdatedOn  t1time.T1Time `json:"updated_on"`
+	Version    int           `json:"version"`
+	EntityType string        `json:"entity_type"`
 }

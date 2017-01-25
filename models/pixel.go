@@ -15,20 +15,20 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // Pixel represents a pixel object (child pixel)
 type Pixel struct {
-	BundleID       int       `json:"bundle_id"`
-	CreatedOn      time.Time `json:"created_on"`
-	Distributed    bool      `json:"distributed"`
-	ID             int       `json:"id,omitempty,readonly"`
-	Name           string    `json:"name"`
-	PixelType      string    `json:"pixel_type"`
-	SupplySourceID int       `json:"supply_source_id"`
-	Tag            string    `json:"tag"`
-	UpdatedOn      time.Time `json:"updated_on"`
-	Version        int       `json:"version"`
-	EntityType     string    `json:"entity_type"`
+	BundleID       int           `json:"bundle_id"`
+	CreatedOn      t1time.T1Time `json:"created_on"`
+	Distributed    bool          `json:"distributed"`
+	ID             int           `json:"id,omitempty,readonly"`
+	Name           string        `json:"name"`
+	PixelType      string        `json:"pixel_type"`
+	SupplySourceID int           `json:"supply_source_id"`
+	Tag            string        `json:"tag"`
+	UpdatedOn      t1time.T1Time `json:"updated_on"`
+	Version        int           `json:"version"`
+	EntityType     string        `json:"entity_type"`
 }

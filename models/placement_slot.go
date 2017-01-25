@@ -15,36 +15,36 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // PlacementSlot represents a placement_slot object
 type PlacementSlot struct {
-	AdSlot            int       `json:"ad_slot"`
-	AllowRemnant      bool      `json:"allow_remnant"`
-	AuctionType       string    `json:"auction_type"`
-	Budget            float32   `json:"budget"`
-	BuyPrice          float32   `json:"buy_price"`
-	BuyPriceType      string    `json:"buy_price_type"`
-	CreatedOn         time.Time `json:"created_on"`
-	Description       string    `json:"description"`
-	EndDate           time.Time `json:"end_date"`
-	EstVolume         float32   `json:"est_volume"`
-	FrequencyAmount   int       `json:"frequency_amount"`
-	FrequencyInterval string    `json:"frequency_interval"`
-	FrequencyType     string    `json:"frequency_type"`
-	Height            int       `json:"height"`
-	ID                int       `json:"id,omitempty,readonly"`
-	Name              string    `json:"name"`
-	PRMPubCeiling     float32   `json:"prm_pub_ceiling"`
-	PRMPubMarkup      float32   `json:"prm_pub_markup"`
-	SellPrice         float32   `json:"sell_price"`
-	SellPriceType     string    `json:"sell_price_type"`
-	SitePlacementID   int       `json:"site_placement_id"`
-	StartDate         time.Time `json:"start_date"`
-	UpdatedOn         time.Time `json:"updated_on"`
-	Version           int       `json:"version"`
-	VolumeUnit        string    `json:"volume_unit"`
-	Width             int       `json:"width"`
-	EntityType        string    `json:"entity_type"`
+	AdSlot            int           `json:"ad_slot"`
+	AllowRemnant      bool          `json:"allow_remnant"`
+	AuctionType       string        `json:"auction_type"`
+	Budget            float32       `json:"budget"`
+	BuyPrice          float32       `json:"buy_price"`
+	BuyPriceType      string        `json:"buy_price_type"`
+	CreatedOn         t1time.T1Time `json:"created_on"`
+	Description       string        `json:"description"`
+	EndDate           t1time.T1Time `json:"end_date"`
+	EstVolume         float32       `json:"est_volume"`
+	FrequencyAmount   int           `json:"frequency_amount"`
+	FrequencyInterval string        `json:"frequency_interval"`
+	FrequencyType     string        `json:"frequency_type"`
+	Height            int           `json:"height"`
+	ID                int           `json:"id,omitempty,readonly"`
+	Name              string        `json:"name"`
+	PRMPubCeiling     float32       `json:"prm_pub_ceiling"`
+	PRMPubMarkup      float32       `json:"prm_pub_markup"`
+	SellPrice         float32       `json:"sell_price"`
+	SellPriceType     string        `json:"sell_price_type"`
+	SitePlacementID   int           `json:"site_placement_id"`
+	StartDate         t1time.T1Time `json:"start_date"`
+	UpdatedOn         t1time.T1Time `json:"updated_on"`
+	Version           int           `json:"version"`
+	VolumeUnit        string        `json:"volume_unit"`
+	Width             int           `json:"width"`
+	EntityType        string        `json:"entity_type"`
 }

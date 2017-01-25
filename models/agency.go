@@ -15,19 +15,19 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // Agency represents an agency object
 type Agency struct {
-	AllowXAdvOptimization bool      `json:"allow_x_adv_optimization"`
-	AllowXAdvPixels       bool      `json:"allow_x_adv_pixels"`
-	CreatedOn             time.Time `json:"created_on"`
-	ID                    int       `json:"id,omitempty,readonly"`
-	Name                  string    `json:"name"`
-	OrganizationID        int       `json:"organization_id"`
-	Status                bool      `json:"status"`
-	UpdatedOn             time.Time `json:"updated_on"`
-	Version               int       `json:"version"`
-	EntityType            string    `json:"entity_type"`
+	AllowXAdvOptimization bool          `json:"allow_x_adv_optimization"`
+	AllowXAdvPixels       bool          `json:"allow_x_adv_pixels"`
+	CreatedOn             t1time.T1Time `json:"created_on"`
+	ID                    int           `json:"id,omitempty,readonly"`
+	Name                  string        `json:"name"`
+	OrganizationID        int           `json:"organization_id"`
+	Status                bool          `json:"status"`
+	UpdatedOn             t1time.T1Time `json:"updated_on"`
+	Version               int           `json:"version"`
+	EntityType            string        `json:"entity_type"`
 }

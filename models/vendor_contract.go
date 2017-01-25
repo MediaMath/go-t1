@@ -15,20 +15,20 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // VendorContract represents a vendor_contract object
 type VendorContract struct {
-	CampaignID    int       `json:"campaign_id"`
-	CreatedOn     time.Time `json:"created_on"`
-	ID            int       `json:"id,omitempty,readonly"`
-	Name          string    `json:"name"`
-	Price         float32   `json:"price"`
-	RateCardType  string    `json:"rate_card_type"`
-	UpdatedOn     time.Time `json:"updated_on"`
-	UseMMContract bool      `json:"use_mm_contract"`
-	VendorID      int       `json:"vendor_id"`
-	Version       int       `json:"version"`
-	EntityType    string    `json:"entity_type"`
+	CampaignID    int           `json:"campaign_id"`
+	CreatedOn     t1time.T1Time `json:"created_on"`
+	ID            int           `json:"id,omitempty,readonly"`
+	Name          string        `json:"name"`
+	Price         float32       `json:"price"`
+	RateCardType  string        `json:"rate_card_type"`
+	UpdatedOn     t1time.T1Time `json:"updated_on"`
+	UseMMContract bool          `json:"use_mm_contract"`
+	VendorID      int           `json:"vendor_id"`
+	Version       int           `json:"version"`
+	EntityType    string        `json:"entity_type"`
 }

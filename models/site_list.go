@@ -15,21 +15,21 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // SiteList represents a site_list object
 type SiteList struct {
-	CreatedOn        time.Time `json:"created_on"`
-	Filename         string    `json:"filename"`
-	ID               int       `json:"id,omitempty,readonly"`
-	Name             string    `json:"name"`
-	OrganizationID   int       `json:"organization_id"`
-	Restriction      string    `json:"restriction"`
-	SitesCount       int       `json:"sites_count"`
-	SitesCountDomain int       `json:"sites_count_domain"`
-	Status           bool      `json:"status"`
-	UpdatedOn        time.Time `json:"updated_on"`
-	Version          int       `json:"version"`
-	EntityType       string    `json:"entity_type"`
+	CreatedOn        t1time.T1Time `json:"created_on"`
+	Filename         string        `json:"filename"`
+	ID               int           `json:"id,omitempty,readonly"`
+	Name             string        `json:"name"`
+	OrganizationID   int           `json:"organization_id"`
+	Restriction      string        `json:"restriction"`
+	SitesCount       int           `json:"sites_count"`
+	SitesCountDomain int           `json:"sites_count_domain"`
+	Status           bool          `json:"status"`
+	UpdatedOn        t1time.T1Time `json:"updated_on"`
+	Version          int           `json:"version"`
+	EntityType       string        `json:"entity_type"`
 }

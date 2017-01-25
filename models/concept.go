@@ -15,17 +15,17 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // Concept represents a concept object
 type Concept struct {
-	AdvertiserID int       `json:"advertiser_id"`
-	CreatedOn    time.Time `json:"created_on"`
-	ID           int       `json:"id,omitempty,readonly"`
-	Name         string    `json:"name"`
-	Status       bool      `json:"status"`
-	UpdatedOn    time.Time `json:"updated_on"`
-	Version      int       `json:"version"`
-	EntityType   string    `json:"entity_type"`
+	AdvertiserID int           `json:"advertiser_id"`
+	CreatedOn    t1time.T1Time `json:"created_on"`
+	ID           int           `json:"id,omitempty,readonly"`
+	Name         string        `json:"name"`
+	Status       bool          `json:"status"`
+	UpdatedOn    t1time.T1Time `json:"updated_on"`
+	Version      int           `json:"version"`
+	EntityType   string        `json:"entity_type"`
 }

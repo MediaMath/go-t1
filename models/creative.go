@@ -15,18 +15,18 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // Creative represents a creative object
 type Creative struct {
-	AtomicCreativeID int       `json:"atomic_creative_id"`
-	CreatedOn        time.Time `json:"created_on"`
-	ID               int       `json:"id,omitempty,readonly"`
-	LastModified     time.Time `json:"last_modified"`
-	Name             string    `json:"name"`
-	Tag              string    `json:"tag"`
-	TagType          string    `json:"tag_type"`
-	Version          int       `json:"version"`
-	EntityType       string    `json:"entity_type"`
+	AtomicCreativeID int           `json:"atomic_creative_id"`
+	CreatedOn        t1time.T1Time `json:"created_on"`
+	ID               int           `json:"id,omitempty,readonly"`
+	LastModified     t1time.T1Time `json:"last_modified"`
+	Name             string        `json:"name"`
+	Tag              string        `json:"tag"`
+	TagType          string        `json:"tag_type"`
+	Version          int           `json:"version"`
+	EntityType       string        `json:"entity_type"`
 }

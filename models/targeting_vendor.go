@@ -15,19 +15,19 @@ package models
 // limitations under the License.
 
 import (
-	"time"
+	"github.com/MediaMath/go-t1/time"
 )
 
 // TargetingVendor represents a targeting_vendor object
 type TargetingVendor struct {
-	CreatedOn             time.Time `json:"created_on"`
-	ID                    int       `json:"id,omitempty,readonly"`
-	Name                  string    `json:"name"`
-	NamespaceCode         string    `json:"namespace_code"`
-	OrganizationID        int       `json:"organization_id"`
-	SitesCountDomain      int       `json:"sites_count_domain"`
-	TargetingVendorTypeID int       `json:"targeting_vendor_type_id"`
-	UpdatedOn             time.Time `json:"updated_on"`
-	Version               int       `json:"version"`
-	EntityType            string    `json:"entity_type"`
+	CreatedOn             t1time.T1Time `json:"created_on"`
+	ID                    int           `json:"id,omitempty,readonly"`
+	Name                  string        `json:"name"`
+	NamespaceCode         string        `json:"namespace_code"`
+	OrganizationID        int           `json:"organization_id"`
+	SitesCountDomain      int           `json:"sites_count_domain"`
+	TargetingVendorTypeID int           `json:"targeting_vendor_type_id"`
+	UpdatedOn             t1time.T1Time `json:"updated_on"`
+	Version               int           `json:"version"`
+	EntityType            string        `json:"entity_type"`
 }

@@ -5,8 +5,6 @@ go-t1 is a Go client for MediaMath's APIs. API Documentation is available [on th
 
 Reference: [![GoDoc](https://godoc.org/github.com/MediaMath/go-t1?status.svg)](https://godoc.org/github.com/MediaMath/go-t1)
 
-Godoc will have the reference when this package is open-sourced. Until then, clone it locally, set up a godoc server with `$ godoc -http ':8080'`, then navigate to [http://localhost:8080/pkg/github.com/MediaMath/go-t1/](http://localhost:8080/pkg/github.com/MediaMath/go-t1/)
-
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)

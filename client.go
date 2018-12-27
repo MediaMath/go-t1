@@ -35,8 +35,9 @@ const (
 
 // Standard base URLs
 var (
-	ProductionURL, _ = url.Parse("https://api.mediamath.com")
-	SandboxURL, _    = url.Parse("https://t1sandbox.mediamath.com")
+	T1ProductionURL, _    = url.Parse("https://api.mediamath.com")
+	Auth0ProductionURL, _ = url.Parse("https://auth.mediamath.com")
+	Auth0DevURL, _        = url.Parse("https://mediamath-dev.auth0.com")
 )
 
 var (
@@ -48,11 +49,9 @@ type Client struct {
 	// HTTP client used to make requests. This client should know how to handle authentication
 	client *http.Client
 
-	// API Key to be used. This will be included as a query string
-	// parameter in all requests made. API key typically will need
-	// to be included in the construction of the HTTP client as well.
-	// Independent of that, it must be included here.
-	APIKey string
+	// Access token to be used. This will be set as the Authorization
+	// bearer token in all requests made.
+	AccessToken string
 
 	// Base URL for API requests. Defaults to the production API endpoint,
 	// but can be set to a specific domain for Sandbox or other similar
@@ -96,21 +95,21 @@ type Client struct {
 // provided, an http.Client with sufficient timeout will be used. To use methods
 // which require authentication (all methods at this point), provide an
 // http.Client that will perform the authentication for you (such as that
-// provided by the authenticators/oauth2 or authenticators/cookie libraries).
-func NewClient(httpClient *http.Client, apiKey string, baseURL *url.URL) *Client {
+// provided by the authenticators/oauth2 library).
+func NewClient(httpClient *http.Client, accessToken string, baseURL *url.URL) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 300 * time.Second}
 	}
 	if baseURL == nil {
-		baseURL = ProductionURL
+		baseURL = T1ProductionURL
 	}
 
 	c := &Client{
-		client:    httpClient,
-		APIKey:    apiKey,
-		BaseURL:   baseURL,
-		userAgent: generateUserAgentString(),
-		rateMu:    sync.Mutex{},
+		client:      httpClient,
+		AccessToken: accessToken,
+		BaseURL:     baseURL,
+		userAgent:   generateUserAgentString(),
+		rateMu:      sync.Mutex{},
 	}
 
 	c.Advertisers = &EntityService{client: c, entityType: "advertisers"}
@@ -171,6 +170,7 @@ func (c *Client) NewRequest(method, urlStr string, body Encoder) (*http.Request,
 
 	req.Header.Add("Accept", mediaTypeJSON)
 	req.Header.Add("User-Agent", c.userAgent)
+	req.Header.Add("Authorization", "Bearer "+c.AccessToken)
 	return req, nil
 }
 
@@ -288,7 +288,7 @@ func generateUserAgentString() string {
 // Session retrieves the session information of the client.
 func (c *Client) Session() (Session, error) {
 	var s Session
-	u := entityPath + "session?api_key=" + c.APIKey
+	u := entityPath + "session"
 	req, err := c.NewRequest("GET", u, nil)
 	if err != nil {
 		return s, err

@@ -1,4 +1,4 @@
-package cookie
+package oauth2
 
 // Copyright 2016-2017 MediaMath
 //
@@ -30,9 +30,13 @@ var (
 )
 
 func setup() {
-	os.Setenv("T1_API_USERNAME", "user")
+	os.Setenv("T1_API_CLIENT_ID", "clientid")
+	os.Setenv("T1_API_CLIENT_SECRET", "clientsecret")
+	os.Setenv("T1_API_AUIDENCE", "audience")
+	os.Setenv("T1_API_GRANTTYPE", "granttype")
+	os.Setenv("T1_API_REALM", "realm")
+	os.Setenv("T1_API_USERNAME", "username")
 	os.Setenv("T1_API_PASSWORD", "password")
-	os.Setenv("T1_API_KEY", "apikey")
 }
 
 func setupServer(statusCode int, filename, cType string) *httptest.Server {
@@ -57,14 +61,27 @@ func setupServer(statusCode int, filename, cType string) *httptest.Server {
 func TestCredentialsFromEnv(t *testing.T) {
 	setup()
 	c := GetCredentialsFromEnv()
-	if exp := "user"; c.Username != exp {
+
+	if exp := "clientid"; c.ClientID != exp {
+		t.Errorf("env client id: want %v, got %v", exp, c.ClientID)
+	}
+	if exp := "clientsecret"; c.ClientSecret != exp {
+		t.Errorf("env client secret: want %v, got %v", exp, c.ClientSecret)
+	}
+	if exp := "audience"; c.Audience != exp {
+		t.Errorf("env audience: want %v, got %v", exp, c.Audience)
+	}
+	if exp := "granttype"; c.GrantType != exp {
+		t.Errorf("env grant: want %v, got %v", exp, c.GrantType)
+	}
+	if exp := "realm"; c.Realm != exp {
+		t.Errorf("env realm: want %v, got %v", exp, c.Realm)
+	}
+	if exp := "username"; c.Username != exp {
 		t.Errorf("env username: want %v, got %v", exp, c.Username)
 	}
 	if exp := "password"; c.Password != exp {
 		t.Errorf("env password: want %v, got %v", exp, c.Password)
-	}
-	if exp := "apikey"; c.APIKey != exp {
-		t.Errorf("env api key: want %v, got %v", exp, c.APIKey)
 	}
 }
 
@@ -72,9 +89,13 @@ func TestConfigEncode(t *testing.T) {
 	setup()
 	vals := GetCredentialsFromEnv().Encode()
 	exp := url.Values{
-		"user":     []string{"user"},
-		"password": []string{"password"},
-		"api_key":  []string{"apikey"},
+		"client_id":     []string{"clientid"},
+		"client_secret": []string{"clientsecret"},
+		"audience":      []string{"audience"},
+		"grant_type":    []string{"granttype"},
+		"realm":         []string{"realm"},
+		"username":      []string{"username"},
+		"password":      []string{"password"},
 	}
 	if !reflect.DeepEqual(exp, vals) {
 		t.Errorf("config encode: want %v, got %v", exp, vals)
@@ -82,83 +103,42 @@ func TestConfigEncode(t *testing.T) {
 }
 
 func TestNewClient(t *testing.T) {
-	c, err := New(Config{}, nil)
+	conf := Config{}
+	c, err := New(&conf, nil, nil)
 	if err != nil {
 		t.Errorf("new: %v", err)
-	}
-	if c.Jar == nil {
-		t.Error("new: expected cookie jar, got none attached")
 	}
 	if exp := 300 * time.Second; c.Timeout != exp {
 		t.Errorf("new timeout: want %v, got %v", exp, c.Timeout)
 	}
 }
 
-func TestSetSession(t *testing.T) {
-	c, _ := New(Config{}, nil)
-	err := SetSession(c, "mysessionid", prod)
-	if err != nil {
-		t.Errorf("set session: %v", err)
-	}
-
-	cooks := c.Jar.Cookies(prod)
-	if len(cooks) == 0 {
-		t.Fatal("set session: no cookies set")
-	}
-	cook := cooks[0]
-	if want, got := "adama_session", cook.Name; want != got {
-		t.Errorf("cookie name: want %v, got %v", want, got)
-	}
-	if want, got := "mysessionid", cook.Value; want != got {
-		t.Errorf("cookie value: want %v, got %v", want, got)
-	}
-}
-
 func TestValidLogin(t *testing.T) {
 	setup()
 	conf := GetCredentialsFromEnv()
-	c, _ := New(conf, nil)
 
 	s := setupServer(200, "testdata/valid_login.json", "")
 	defer s.Close()
 
 	u, _ := url.Parse(s.URL)
-	err := Login(c, u, conf)
+	err := Login(u, &conf)
 	if err != nil {
 		t.Errorf("valid login: %v", err)
-	}
-}
-
-func TestDeveloperInactive(t *testing.T) {
-	setup()
-	conf := GetCredentialsFromEnv()
-	c, _ := New(conf, nil)
-
-	s := setupServer(403, "testdata/invalid_developerinactive.html", "text/xml")
-	defer s.Close()
-
-	u, _ := url.Parse(s.URL)
-	err := Login(c, u, conf)
-	if err == nil {
-		t.Error("dev inactive: expected an error, got none")
-	} else if exp, e := "login: <h1>Developer Inactive</h1>\n", err.Error(); e != exp {
-		t.Errorf("dev inactive: want %v, got %v", exp, e)
 	}
 }
 
 func TestAuthError(t *testing.T) {
 	setup()
 	conf := GetCredentialsFromEnv()
-	c, _ := New(conf, nil)
 
 	s := setupServer(401, "testdata/invalid_autherror.json", "")
 	defer s.Close()
 
 	u, _ := url.Parse(s.URL)
-	err := Login(c, u, conf)
+	err := Login(u, &conf)
 	if err == nil {
 		t.Error("auth error: expected an error, got none")
-	} else if exp, e := "login: Authentication error", err.Error(); e != exp {
+    } else if exp, e := "login: error: invalid_grant. Wrong email or password.", err.Error(); e != exp {
 		t.Errorf("dev inactive: want %v, got %v", exp, e)
 	}
 }

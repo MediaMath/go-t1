@@ -68,10 +68,6 @@ func (s *EntityService) Get(id int, data interface{}) (Meta, error) {
 	// 	structToMapGivenValues(params, vals)
 	// }
 
-	vals.Set("api_key", s.client.APIKey)
-	buf.WriteByte('?')
-	buf.WriteString(vals.Encode())
-
 	req, err := s.client.NewRequest("GET", buf.String(), nil)
 	if err != nil {
 		return Meta{}, err
@@ -122,9 +118,6 @@ func (s *EntityService) List(params *UserParams, data interface{}) (Meta, error)
 		structToMapGivenValues(params, vals)
 	}
 
-	vals.Set("api_key", s.client.APIKey)
-	buf.WriteByte('?')
-	buf.WriteString(vals.Encode())
 	req, err := s.client.NewRequest("GET", buf.String(), nil)
 	if err != nil {
 		return Meta{}, err
@@ -152,8 +145,6 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 		buf.WriteByte('/')
 		buf.WriteString(strconv.Itoa(id))
 	}
-	buf.WriteString("?api_key=")
-	buf.WriteString(s.client.APIKey)
 
 	structToMapGivenValues(data, vals)
 

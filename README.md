@@ -37,7 +37,7 @@ To set up authentication, use an authenticator:
 	conf := cookie.GetCredentialsFromEnv()
 
 	// Create new *http.Client with these credentials
-	c, err := cookie.New(conf, t1.ProductionURL)
+	c, err := cookie.New(conf, t1.T1ProductionURL)
 	if err != nil {
 		log.Fatalf("initial login: %v", err)
 	}
@@ -50,7 +50,7 @@ Construct a new client, then use the various services on the client to access di
 [embedmd]:# (testdata/examples/get_organization/main.go /.*Construct new t1/ /fmt.Printf\("Meta:.*\)/)
 ```go
 	// Construct new t1 client
-	t1Client := t1.NewClient(c, conf.APIKey, t1.ProductionURL)
+	t1Client := t1.NewClient(c, conf.APIKey, t1.T1ProductionURL)
 
 	// Model object gets passed in to the various service methods
 	var org models.Organization

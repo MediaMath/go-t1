@@ -56,7 +56,7 @@ func main() {
 	c := conf.Client(oauth2.NoContext, tok)
 
 	// Construct new t1 client
-	t1Client := t1.NewClient(c, conf.ClientID, t1.ProductionURL)
+	t1Client := t1.NewClient(c, conf.ClientID, t1.T1ProductionURL)
 
 	// Model object gets passed in to the various service methods
 	var org models.Organization

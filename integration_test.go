@@ -30,7 +30,7 @@ func TestGetSave_org(t *testing.T) {
 	v := reflect.ValueOf(org)
 	for _, field := range []string{
 		"Address1",
-		"AdXSeatAccountID",
+		"AdxSeatAccountID",
 		"AllowBYOPrice",
 		"CreatedOn",
 		"ID",
@@ -71,10 +71,10 @@ func TestMeta_counts(t *testing.T) {
 func TestMain(m *testing.M) {
 	conf := cookie.GetCredentialsFromEnv()
 	var err error
-	c, err := cookie.New(conf, ProductionURL)
+	c, err := cookie.New(conf, T1ProductionURL)
 	if err != nil {
 		log.Fatalf("cookie login: %v\n", err)
 	}
-	iClient = NewClient(c, conf.APIKey, ProductionURL)
+	iClient = NewClient(c, conf.APIKey, T1ProductionURL)
 	os.Exit(m.Run())
 }

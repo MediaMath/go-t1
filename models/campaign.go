@@ -18,47 +18,73 @@ import (
 	"github.com/MediaMath/go-t1/time"
 )
 
+type TotalBudget struct {
+	CurrencyCode string `json:"currency_code"`
+	Value        int    `json:"value"`
+}
+
+type GoalValue struct {
+	CurrencyCode string `json:"currency_code"`
+	Value        int    `json:"value"`
+}
+
+type SpendCapAmount struct {
+	CurrencyCode string `json:"currency_code"`
+	Value        int    `json:"value"`
+}
+
 // Campaign represents a campaign object
 type Campaign struct {
-	AdServerFee               float32       `json:"ad_server_fee"`
-	AdServerID                int           `json:"ad_server_id"`
-	AdServerPassword          string        `json:"ad_server_password"`
-	AdServerUsername          string        `json:"ad_server_username"`
-	AdvertiserID              int           `json:"advertiser_id"`
-	AgencyFeePct              float32       `json:"agency_fee_pct"`
-	ConversionType            string        `json:"conversion_type"`
-	ConversionVariableMinutes int           `json:"conversion_variable_minutes"`
-	CreatedOn                 t1time.T1Time `json:"created_on"`
-	CurrencyCode              string        `json:"currency_code"`
-	DCSDataIsCampaignLevel    bool          `json:"dcs_data_is_campaign_level"`
-	EndDate                   t1time.T1Time `json:"end_date"`
-	FrequencyAmount           int           `json:"frequency_amount"`
-	FrequencyInterval         string        `json:"frequency_interval"`
-	FrequencyType             string        `json:"frequency_type"`
-	GoalCategory              string        `json:"goal_category"`
-	GoalType                  string        `json:"goal_type"`
-	GoalValue                 float32       `json:"has_custom_attribution"`
-	ID                        int           `json:"id,omitempty,readonly"`
-	InitialStartDate          t1time.T1Time `json:"initial_start_date"`
-	IOName                    string        `json:"io_name"`
-	IOReferenceNum            string        `json:"io_reference_num"`
-	MarginPct                 float32       `json:"margin_pct"`
-	MeritPixelID              int           `json:"merit_pixel_id"`
-	Name                      string        `json:"name"`
-	PacingAlert               float32       `json:"pacing_alert"`
-	PCWindowMinutes           int           `json:"pc_window_minutes"`
-	PVPct                     float32       `json:"pv_pct"`
-	PVWindowMinutes           int           `json:"pv_window_minutes"`
-	ServiceType               string        `json:"service_type"`
-	SpendCapAmount            float32       `json:"spend_cap_amount"`
-	SpendCapAutomatic         bool          `json:"spend_cap_automatic"`
-	SpendCapEnabled           bool          `json:"spend_cap_enabled"`
-	StartDate                 t1time.T1Time `json:"start_date"`
-	Status                    bool          `json:"status"`
-	UpdatedOn                 t1time.T1Time `json:"updated_on"`
-	UseDefaultAdServer        bool          `json:"use_default_ad_server"`
-	UseMMFreq                 bool          `json:"use_mm_freq"`
-	ZoneName                  string        `json:"zone_name"`
-	Version                   int           `json:"version"`
-	EntityType                string        `json:"entity_type"`
+	UseMmFreq                          bool             `json:"use_mm_freq"`
+	SpendCapType                       string           `json:"spend_cap_type"`
+	SourceCampaignID                   int              `json:"source_campaign_id"`
+	IsProgrammaticGuaranteed           bool             `json:"is_programmatic_guaranteed"`
+	ZoneName                           string           `json:"zone_name"`
+	FrequencyInterval                  string           `json:"frequency_interval"`
+	UpdatedOn                          t1time.T1Time    `json:"updated_on"`
+	UseDefaultAdServer                 bool             `json:"use_default_ad_server"`
+	CostPassthroughPercentEnabled      bool             `json:"cost_passthrough_percent_enabled"`
+	InitialStartDate                   t1time.T1Time    `json:"initial_start_date"`
+	RestrictTargetingToDeterministicID bool             `json:"restrict_targeting_to_deterministic_id"`
+	CreatedOn                          t1time.T1Time    `json:"created_on"`
+	ID                                 int              `json:"id"`
+	TotalBudget                        []TotalBudget    `json:"total_budget"`
+	ServiceType                        string           `json:"service_type"`
+	CurrencyCode                       string           `json:"currency_code"`
+	HasCustomAttribution               bool             `json:"has_custom_attribution"`
+	Name                               string           `json:"name"`
+	AdServerID                         int              `json:"ad_server_id"`
+	CostPassthroughCpmEnabled          bool             `json:"cost_passthrough_cpm_enabled"`
+	FrequencyAmount                    int              `json:"frequency_amount"`
+	RestrictTargetingToSameDeviceID    bool             `json:"restrict_targeting_to_same_device_id"`
+	SuspiciousTrafficFilterLevel       int              `json:"suspicious_traffic_filter_level"`
+	EndDate                            t1time.T1Time    `json:"end_date"`
+	FrequencyOptimization              bool             `json:"frequency_optimization"`
+	AdvertiserID                       int              `json:"advertiser_id"`
+	ConversionVariableMinutes          int              `json:"conversion_variable_minutes"`
+	MinimizeMultiAds                   bool             `json:"minimize_multi_ads"`
+	Status                             bool             `json:"status"`
+	GoalType                           string           `json:"goal_type"`
+	FrequencyType                      string           `json:"frequency_type"`
+	MarginPct                          int              `json:"margin_pct"`
+	DcsDataIsCampaignLevel             bool             `json:"dcs_data_is_campaign_level"`
+	PvWindowMinutes                    int              `json:"pv_window_minutes"`
+	ImpressionCapType                  string           `json:"impression_cap_type"`
+	GoalValue                          []GoalValue      `json:"goal_value"`
+	ImpressionCapAmount                int              `json:"impression_cap_amount"`
+	SpendCapAmount                     []SpendCapAmount `json:"spend_cap_amount"`
+	EntityType                         string           `json:"entity_type"`
+	PcWindowMinutes                    int              `json:"pc_window_minutes"`
+	IoName                             string           `json:"io_name"`
+	StartDate                          t1time.T1Time    `json:"start_date"`
+	OverrideSuspiciousTrafficFilter    bool             `json:"override_suspicious_traffic_filter"`
+	IoReferenceNum                     string           `json:"io_reference_num"`
+	Version                            int              `json:"version"`
+	AgencyFeePct                       int              `json:"agency_fee_pct"`
+	ImpressionCapAutomatic             bool             `json:"impression_cap_automatic"`
+	SpendCapAutomatic                  bool             `json:"spend_cap_automatic"`
+	ConversionType                     string           `json:"conversion_type"`
+	TotalImpressionBudget              int              `json:"total_impression_budget"`
+	MeritPixelID                       int              `json:"merit_pixel_id"`
+	PvPct                              int              `json:"pv_pct"`
 }

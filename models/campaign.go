@@ -54,7 +54,7 @@ type Campaign struct {
 	HasCustomAttribution               bool             `json:"has_custom_attribution"`
 	Name                               string           `json:"name"`
 	AdServerID                         int              `json:"ad_server_id"`
-	CostPassthroughCpmEnabled          bool             `json:"cost_passthrough_cpm_enabled"`
+	CostPassthroughCPMEnabled          bool             `json:"cost_passthrough_cpm_enabled"`
 	FrequencyAmount                    int              `json:"frequency_amount"`
 	RestrictTargetingToSameDeviceID    bool             `json:"restrict_targeting_to_same_device_id"`
 	SuspiciousTrafficFilterLevel       int              `json:"suspicious_traffic_filter_level"`
@@ -66,8 +66,8 @@ type Campaign struct {
 	Status                             bool             `json:"status"`
 	GoalType                           string           `json:"goal_type"`
 	FrequencyType                      string           `json:"frequency_type"`
-	MarginPct                          int              `json:"margin_pct"`
-	DcsDataIsCampaignLevel             bool             `json:"dcs_data_is_campaign_level"`
+	MarginPCT                          int              `json:"margin_pct"`
+	DCSDataIsCampaignLevel             bool             `json:"dcs_data_is_campaign_level"`
 	PvWindowMinutes                    int              `json:"pv_window_minutes"`
 	ImpressionCapType                  string           `json:"impression_cap_type"`
 	GoalValue                          []GoalValue      `json:"goal_value"`
@@ -75,16 +75,16 @@ type Campaign struct {
 	SpendCapAmount                     []SpendCapAmount `json:"spend_cap_amount"`
 	EntityType                         string           `json:"entity_type"`
 	PcWindowMinutes                    int              `json:"pc_window_minutes"`
-	IoName                             string           `json:"io_name"`
+	IOName                             string           `json:"io_name"`
 	StartDate                          t1time.T1Time    `json:"start_date"`
 	OverrideSuspiciousTrafficFilter    bool             `json:"override_suspicious_traffic_filter"`
-	IoReferenceNum                     string           `json:"io_reference_num"`
+	IOReferenceNum                     string           `json:"io_reference_num"`
 	Version                            int              `json:"version"`
-	AgencyFeePct                       int              `json:"agency_fee_pct"`
+	AgencyFeePCT                       int              `json:"agency_fee_pct"`
 	ImpressionCapAutomatic             bool             `json:"impression_cap_automatic"`
 	SpendCapAutomatic                  bool             `json:"spend_cap_automatic"`
 	ConversionType                     string           `json:"conversion_type"`
 	TotalImpressionBudget              int              `json:"total_impression_budget"`
 	MeritPixelID                       int              `json:"merit_pixel_id"`
-	PvPct                              int              `json:"pv_pct"`
+	PVPCT                              int              `json:"pv_pct"`
 }

@@ -18,20 +18,16 @@ import (
 	"github.com/MediaMath/go-t1/time"
 )
 
-type TotalBudget struct {
+type CurrencyValue struct {
 	CurrencyCode string `json:"currency_code"`
 	Value        int    `json:"value"`
 }
 
-type GoalValue struct {
-	CurrencyCode string `json:"currency_code"`
-	Value        int    `json:"value"`
-}
-
-type SpendCapAmount struct {
-	CurrencyCode string `json:"currency_code"`
-	Value        int    `json:"value"`
-}
+type (
+	TotalBudget    CurrencyValue
+	GoalValue      CurrencyValue
+	SpendCapAmount CurrencyValue
+)
 
 // Campaign represents a campaign object
 type Campaign struct {

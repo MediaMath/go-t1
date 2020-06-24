@@ -15,6 +15,7 @@ package t1
 // limitations under the License.
 
 import (
+	t1time "github.com/MediaMath/go-t1/time"
 	"net/url"
 	"reflect"
 	"strconv"
@@ -54,6 +55,8 @@ func structToMapGivenValues(data interface{}, values url.Values) {
 			for j := 0; j < f.Len(); j++ {
 				values.Add(tag, f.Index(j).String())
 			}
+		case t1time.T1Time:
+			values.Add(tag, f.Interface().(t1time.T1Time).String())
 		}
 	}
 }
@@ -113,6 +116,8 @@ func isEmptyValue(v reflect.Value) bool {
 		return v.Float() == 0
 	case reflect.Interface, reflect.Ptr:
 		return v.IsNil()
+	case reflect.Struct:
+		return v.IsZero()
 	}
 	return false
 }

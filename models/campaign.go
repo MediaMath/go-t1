@@ -55,6 +55,7 @@ type Campaign struct {
 	SpendCapEnabled           bool          `json:"spend_cap_enabled"`
 	StartDate                 t1time.T1Time `json:"start_date"`
 	Status                    bool          `json:"status"`
+	TotalBudget               float32       `json:"total_budget"`
 	UpdatedOn                 t1time.T1Time `json:"updated_on"`
 	UseDefaultAdServer        bool          `json:"use_default_ad_server"`
 	UseMMFreq                 bool          `json:"use_mm_freq"`

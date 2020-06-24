@@ -14,6 +14,10 @@ package models
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import (
+	"github.com/MediaMath/go-t1/time"
+)
+
 // Campaign represents a campaign object
 type Campaign struct {
     AdServerFee               float32       `json:"ad_server_fee"`

@@ -38,7 +38,7 @@ type Campaign struct {
 	GoalCategory              string        `json:"goal_category"`
 	GoalType                  string        `json:"goal_type"`
 	GoalValue                 float32       `json:"goal_value"`
-	ID                        int           `json:"id,readonly"`
+	ID                        int           `json:"id,omitempty,readonly"`
 	InitialStartDate          t1time.T1Time `json:"initial_start_date"`
 	IOName                    string        `json:"io_name"`
 	IOReferenceNum            string        `json:"io_reference_num"`

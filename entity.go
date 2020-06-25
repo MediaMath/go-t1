@@ -165,6 +165,38 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 	return execute(req, s.client, data)
 }
 
+// SaveWithResponse posts an entity to the API. data *must* be a pointer to an object: save
+// will modify the response struct with what gets returned.
+func (s *EntityService) SaveWithResponse(data interface{}, response interface{}) (Meta, error) {
+	if data == nil {
+		return Meta{}, errors.New("save: nil data provided")
+	}
+
+	buf, vals := bufferPool.Get().(*bytes.Buffer), valuesPool.Get().(url.Values)
+	defer func() {
+		putBufferBackInPool(buf)
+		putValuesBackInPool(vals)
+	}()
+
+	buf.WriteString(entityPath)
+	buf.WriteString(s.entityType)
+	if id, _ := getIDOfObject(data); id != 0 {
+		buf.WriteByte('/')
+		buf.WriteString(strconv.Itoa(id))
+	}
+	buf.WriteString("?api_key=")
+	buf.WriteString(s.client.APIKey)
+
+	structToMapGivenValues(data, vals)
+
+	req, err := s.client.NewRequest("POST", buf.String(), vals)
+	if err != nil {
+		return Meta{}, err
+	}
+
+	return execute(req, s.client, response)
+}
+
 func getIDOfObject(data interface{}) (int, bool) {
 	p := reflect.ValueOf(data)
 	f := reflect.Indirect(p).FieldByName("ID")

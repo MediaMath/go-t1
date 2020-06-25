@@ -37,7 +37,7 @@ type Campaign struct {
 	FrequencyType             string        `json:"frequency_type"`
 	GoalCategory              string        `json:"goal_category"`
 	GoalType                  string        `json:"goal_type"`
-	GoalValue                 float32       `json:"has_custom_attribution"`
+	GoalValue                 float32       `json:"goal_value"`
 	ID                        int           `json:"id,omitempty,readonly"`
 	InitialStartDate          t1time.T1Time `json:"initial_start_date"`
 	IOName                    string        `json:"io_name"`
@@ -61,5 +61,5 @@ type Campaign struct {
 	UseMMFreq                 bool          `json:"use_mm_freq"`
 	ZoneName                  string        `json:"zone_name"`
 	Version                   int           `json:"version"`
-	EntityType                string        `json:"entity_type"`
+	EntityType                string        `json:"entity_type,readonly"`
 }

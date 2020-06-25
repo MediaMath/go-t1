@@ -166,7 +166,7 @@ func (s *EntityService) Save(data interface{}) (Meta, error) {
 }
 
 // SaveWithResponse posts an entity to the API. data *must* be a pointer to an object: save
-// will modify the response object with what gets returned.
+// will modify the response struct with what gets returned.
 func (s *EntityService) SaveWithResponse(data interface{}, response interface{}) (Meta, error) {
 	if data == nil {
 		return Meta{}, errors.New("save: nil data provided")

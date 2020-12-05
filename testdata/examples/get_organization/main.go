@@ -29,13 +29,13 @@ func main() {
 	conf := cookie.GetCredentialsFromEnv()
 
 	// Create new *http.Client with these credentials
-	c, err := cookie.New(conf, t1.ProductionURL)
+	c, err := cookie.New(conf, t1.T1ProductionURL)
 	if err != nil {
 		log.Fatalf("initial login: %v", err)
 	}
 
 	// Construct new t1 client
-	t1Client := t1.NewClient(c, conf.APIKey, t1.ProductionURL)
+	t1Client := t1.NewClient(c, conf.APIKey, t1.T1ProductionURL)
 
 	// Model object gets passed in to the various service methods
 	var org models.Organization

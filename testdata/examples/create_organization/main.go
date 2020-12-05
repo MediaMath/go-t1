@@ -17,24 +17,28 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/url"
+    "os"
 
 	"github.com/MediaMath/go-t1"
-	"github.com/MediaMath/go-t1/authenticators/cookie"
+	"github.com/MediaMath/go-t1/authenticators/oauth2"
 	"github.com/MediaMath/go-t1/models"
 )
 
 func main() {
 	// Set up configuration from envvars
-	conf := cookie.GetCredentialsFromEnv()
+	conf := oauth2.GetCredentialsFromEnv()
+
+	t1URL, _ := url.Parse(os.Getenv("T1_API_URL"))
 
 	// Create new *http.Client with these credentials
-	c, err := cookie.New(conf, t1.SandboxURL)
+	c, err := oauth2.New(&conf, t1URL, t1.Auth0DevURL)
 	if err != nil {
 		log.Fatalf("initial login: %v", err)
 	}
 
 	// Construct new t1 client
-	t1Client := t1.NewClient(c, conf.APIKey, t1.SandboxURL)
+	t1Client := t1.NewClient(c, conf.AccessToken, t1URL)
 
 	// New org we will create
 	org := models.Organization{

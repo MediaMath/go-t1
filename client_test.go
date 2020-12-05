@@ -60,9 +60,9 @@ func teardown() {
 }
 
 func TestNewClient(t *testing.T) {
-	c := NewClient(nil, "myapikey", nil)
+	c := NewClient(nil, "accesstoken", nil)
 
-	if got, want := c.BaseURL.String(), ProductionURL.String(); got != want {
+	if got, want := c.BaseURL.String(), T1ProductionURL.String(); got != want {
 		t.Errorf("NewClient BaseURL: got %v, want %v", got, want)
 	}
 
@@ -73,8 +73,8 @@ func TestNewClient(t *testing.T) {
 		t.Errorf("NewClient UserAgent: got %v, want %v", got, want)
 	}
 
-	if got, want := c.APIKey, "myapikey"; got != want {
-		t.Errorf("NewClient UserAgent: got %v, want %v", got, want)
+	if got, want := c.AccessToken, "accesstoken"; got != want {
+		t.Errorf("NewClient AccessToken: got %v, want %v", got, want)
 	}
 
 	if !c.RateLimitReset.IsZero() {
